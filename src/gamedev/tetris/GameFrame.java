@@ -110,8 +110,12 @@ public class GameFrame extends Game{
 			spawn = false;
 		}
 		if(fallTime >= fallDelay) {
-		//	if(!currentPiece.onBorder())
-			currentPiece.moveDown();
+			if(!currentPiece.onBottom()){
+				currentPiece.moveDown(1);
+			}
+			else{
+				spawn = true;
+			}
 			fallTime -= fallDelay;
 		}
 		
@@ -119,20 +123,27 @@ public class GameFrame extends Game{
 	
 	private void getInput() {
 		if(keyPressed(KeyEvent.VK_LEFT)) {
-			if(!currentPiece.onBorder())
-			currentPiece.moveLeft();
+			if(!currentPiece.leftClear(boardLocX, boardLocY)){
+				currentPiece.moveLeft();
+			}
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
-			if(!currentPiece.onBorder())
-			currentPiece.moveRight();
+			if(!currentPiece.rightClear(boardLocX, boardLocY)){
+				currentPiece.moveRight();
+			}
 		}
 		else if(keyPressed(KeyEvent.VK_UP)) {
 			
 		}
 		else if(keyPressed(KeyEvent.VK_DOWN)) {
-			if(!currentPiece.onBorder())
-			currentPiece.moveDown();
+			if(!currentPiece.onBottom())
+			currentPiece.moveDown(1);
 		}
+		else if(keyPressed(KeyEvent.VK_SPACE)) {
+			currentPiece.quickPlace();
+		//	spawn = true;
+		}
+		
 		
 		if(keyPressed('Z')) {
 			

@@ -42,13 +42,6 @@ public class SPiece extends Tetrimino{
 		// TODO Auto-generated method stub
 		
 	}
-	public void render(Graphics2D g){
-		for(int i = 0; i < row; i++){
-			for(int j = 0; j < col; j++){
-				matrix[i][j].render(g);
-			}
-		}
-	}
 	
 	@Override
 	public void draw() {

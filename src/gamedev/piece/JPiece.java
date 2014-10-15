@@ -17,7 +17,7 @@ public class JPiece extends Tetrimino{
 		matrix[2][1] = new Block(image, (x + 2) * width + boardX, (y + 1) * height + boardY);
 		matrix[2][2] = new Block(image, (x + 2) * width + boardX, (y + 2) * height + boardY);
 		
-		matrix[1][0].setOccupied(true);
+		matrix[1][2].setOccupied(true);
 		matrix[2][0].setOccupied(true);
 		matrix[2][1].setOccupied(true);
 		matrix[2][2].setOccupied(true);
@@ -44,15 +44,6 @@ public class JPiece extends Tetrimino{
 		
 	}
 
-
-	
-	public void render(Graphics2D g){
-		for(int i = 0; i < row; i++){
-			for(int j = 0; j < col; j++){
-				matrix[i][j].render(g);
-			}
-		}
-	}
 	@Override
 	public void draw() {
 		// TODO Auto-generated method stub
@@ -60,9 +51,7 @@ public class JPiece extends Tetrimino{
 	}
 	private String name = "J";
 	
-	public String getName() {
-		return name;
-	}
+	
 
 	public void setName(String name) {
 		this.name = name;
