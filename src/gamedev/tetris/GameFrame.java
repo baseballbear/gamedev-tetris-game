@@ -134,12 +134,12 @@ public class GameFrame extends Game{
 	
 	private void getInput() {
 		if(keyPressed(KeyEvent.VK_LEFT)) {
-			if(!currentPiece.leftClear(boardLocX, boardLocY)){
+			if(!currentPiece.leftClear(boardLocX, boardLocY) && !currentPiece.onBottom()){
 				currentPiece.moveLeft();
 			}
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
-			if(!currentPiece.rightClear(boardLocX, boardLocY)){
+			if(!currentPiece.rightClear(boardLocX, boardLocY) && !currentPiece.onBottom()){
 				currentPiece.moveRight();
 			}
 		}
@@ -151,7 +151,7 @@ public class GameFrame extends Game{
 			currentPiece.moveDown(speed);
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
-			currentPiece.quickPlace();
+			currentPiece.quickDrop();
 		//	spawn = true;
 		}
 		

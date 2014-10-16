@@ -112,15 +112,17 @@ public abstract class Tetrimino {
 		return false;
 	}
 	
-	public void quickPlace(){
+	public void quickDrop(){
 		row = matrix.length;
 		
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
 				if(matrix[i][j].isOccupied()){
-					matrix[i][j].setY(20*height);
-					System.out.println("new loc: " + matrix[i][j].getY());
+					while(!onBottom())
+					moveDown(1);
+				//	matrix[i][j].setY(matrix[i][j].getY() + ((17*height) - matrix[i][j].getY()));
+			//		System.out.println("new loc: " + matrix[i][j].getY());
 				}
 			}
 		}
