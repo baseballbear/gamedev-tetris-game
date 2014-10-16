@@ -10,6 +10,7 @@ public class JPiece extends Tetrimino{
 	
 	private int row = 3, col = 3;
 	public JPiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		name = "J";
 		initializeMatrix(image);
 		
 		matrix[1][2] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);
@@ -49,13 +50,9 @@ public class JPiece extends Tetrimino{
 		// TODO Auto-generated method stub
 		
 	}
-	private String name = "J";
 	
 	
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 	
 	
 	

@@ -7,8 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class LinePiece extends Tetrimino{
-	int row = 1, col = 4;
+	
+	private int row = 1, col = 4;
+	
 	public LinePiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		name = "|";
 		initializeMatrix(image);
 		
 		matrix[0][0] = new Block(image, (x + 0)* width + boardX,  (y + 0) * height + boardY);
@@ -48,14 +51,6 @@ public class LinePiece extends Tetrimino{
 		// TODO Auto-generated method stub
 		
 	}
-	private String name = "|";
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 	
 }

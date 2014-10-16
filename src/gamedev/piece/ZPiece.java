@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 public class ZPiece extends Tetrimino{
 	int row = 3, col = 3;
 	public ZPiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		name = "Z";
 		initializeMatrix(image);
 		
 		matrix[1][0] = new Block(image, (x + 1) * width + boardX, (y + 0) * height + boardY);
@@ -52,14 +53,7 @@ public class ZPiece extends Tetrimino{
 		// TODO Auto-generated method stub
 		
 	}
-	private String name = "Z";
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 	
 }

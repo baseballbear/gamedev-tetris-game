@@ -10,6 +10,7 @@ public class SquarePiece extends Tetrimino{
 	int row, col;
 	
 	public void initializeMatrix(BufferedImage image){
+		name = "O";
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){
 			for(int j = 0; j < col; j++){
@@ -36,15 +37,7 @@ public class SquarePiece extends Tetrimino{
 		// TODO Auto-generated method stub
 		
 	}
-	private String name = "O";
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	
 }
