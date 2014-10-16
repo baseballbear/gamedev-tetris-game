@@ -88,17 +88,11 @@ public class GameFrame extends Game{
 		fallTime += time;
 		
 		if(nextPieces.isEmpty()){
-			//nextPieces = availablePieces;
-			//Collections.shuffle(nextPieces);
 			setUpNextPieces();
-			System.out.println(availablePieces.get(0).getName());
-			
 			shuffle = false;
 		}
 	
 		if(!nextPieces.isEmpty()){
-			//System.out.println("AA");
-			String s = nextPieces.get(0).getName();
 			spawn(time);
 		}
 		
@@ -152,7 +146,6 @@ public class GameFrame extends Game{
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
 			currentPiece.quickDrop();
-		//	spawn = true;
 		}
 		
 		

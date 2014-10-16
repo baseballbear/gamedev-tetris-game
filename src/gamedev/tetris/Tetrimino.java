@@ -69,7 +69,6 @@ public abstract class Tetrimino {
 			for(int j = 0; j < col; j++){
 				if(matrix[i][j].isOccupied()){
 					if(matrix[i][j].getX() < (1 * width) + boardX){
-						//System.out.println("border");
 						return true;
 					}
 				}
@@ -121,8 +120,6 @@ public abstract class Tetrimino {
 				if(matrix[i][j].isOccupied()){
 					while(!onBottom())
 					moveDown(1);
-				//	matrix[i][j].setY(matrix[i][j].getY() + ((17*height) - matrix[i][j].getY()));
-			//		System.out.println("new loc: " + matrix[i][j].getY());
 				}
 			}
 		}
