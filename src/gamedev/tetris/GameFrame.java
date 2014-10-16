@@ -22,7 +22,7 @@ public class GameFrame extends Game{
 
 	private int width = 10, height = 20, 
 			size = 25, boardLocX, boardLocY,
-			numOfPieces = 6, timer = 0, speed = 2;
+			numOfPieces = 6, timer = 0, speed = 1;
 	private Block[][] board;
 	
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -140,9 +140,9 @@ public class GameFrame extends Game{
 		else if(keyPressed(KeyEvent.VK_UP)) {
 			
 		}
-		else if(keyPressed(KeyEvent.VK_DOWN)) {
+		else if(keyDown(KeyEvent.VK_DOWN)) {
 			if(!currentPiece.onBottom())
-			currentPiece.moveDown(speed);
+				currentPiece.moveDown(speed);
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
 			currentPiece.quickDrop();
@@ -179,14 +179,18 @@ public class GameFrame extends Game{
 		t = new ZPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);	
 		
-/*		block = "img/L block.png";
+		block = "img/L block.png";
 		t = new LPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
-		
+/*		
 		block = "img/T block.png";
 		t = new TPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
-*/	
+*/
+		block = "img/square Block.png";
+		t = new SquarePiece(getImage(block), x, y, boardLocX, boardLocY);
+		availablePieces.add(t);
+		
 	}
 
 }

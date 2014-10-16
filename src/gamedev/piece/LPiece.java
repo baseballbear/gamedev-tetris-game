@@ -7,7 +7,22 @@ import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
 
 public class LPiece extends Tetrimino{
-	int row, col;
+	int row = 3, col = 3;
+	
+	public LPiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		name = "J";
+		initializeMatrix(image);
+		
+		matrix[1][0] = new Block(image, (x + 0) * width + boardX, (y + 1) * height + boardY);
+		matrix[2][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
+		matrix[2][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);
+		matrix[2][2] = new Block(image, (x + 2) * width + boardX, (y + 2) * height + boardY);
+		
+		matrix[1][0].setOccupied(true);
+		matrix[2][0].setOccupied(true);
+		matrix[2][1].setOccupied(true);
+		matrix[2][2].setOccupied(true);
+	}
 	
 	public void initializeMatrix(BufferedImage image){
 		name = "L";

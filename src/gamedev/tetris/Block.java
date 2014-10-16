@@ -8,6 +8,8 @@ public class Block extends Sprite{
 	
 	private boolean occupied;
 
+	public Block(){};
+	
 	public Block(BufferedImage img, double x, double y){
 		super(img, x, y);
 	}
