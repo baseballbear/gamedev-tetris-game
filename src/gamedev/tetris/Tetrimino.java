@@ -26,24 +26,31 @@ public abstract class Tetrimino {
 		}
 	}
 	
-	public void moveLeft() {
+	public void moveLeft(int boardX) {
 		row = matrix.length;
 		
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
-				matrix[i][j].setX(matrix[i][j].getX() - 1*width);
+				if(matrix[i][j].isOccupied()){
+					if(!(matrix[i][j].getX() < (1 * width) + boardX)){
+						matrix[i][j].setX(matrix[i][j].getX() - 1*width);
+					}
+				}
 			}
 		}
 	}
-
-	public void moveRight() {
+	public void moveRight(int boardX) {
 		row = matrix.length;
 		
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
-				matrix[i][j].setX(matrix[i][j].getX() + 1*width);
+				if(matrix[i][j].isOccupied()){
+					if(!(matrix[i][j].getX() > (8 * width) + boardX)){
+						matrix[i][j].setX(matrix[i][j].getX() + 1*width);
+					}
+				}
 			}
 		}
 	}
@@ -57,44 +64,9 @@ public abstract class Tetrimino {
 				matrix[i][j].setY(matrix[i][j].getY() + speed*height);
 			}
 		}
-	
-	
 	}
 	
-	public boolean leftClear(int boardX, int boardY) {
-		row = matrix.length;
-		
-		for(int i = 0; i < row; i++){
-			col = matrix[i].length;
-			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied()){
-					if(matrix[i][j].getX() < (1 * width) + boardX){
-						return true;
-					}
-				}
-				
-			}
-		}
-		return false;
-	}
-	
-	public boolean rightClear(int boardX, int boardY) {
-		row = matrix.length;
-		 
-		for(int i = 0; i < row; i++){
-			col = matrix[i].length;
-			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied()){
-					if(matrix[i][j].getX() > (8 * width) + boardX){
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean onBottom() {
+	public boolean collision() {
 		row = matrix.length;
 		
 		for(int i = 0; i < row; i++){
@@ -118,7 +90,7 @@ public abstract class Tetrimino {
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
 				if(matrix[i][j].isOccupied()){
-					while(!onBottom())
+					while(!collision())
 					moveDown(1);
 				}
 			}

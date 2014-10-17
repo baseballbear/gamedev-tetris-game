@@ -27,7 +27,7 @@ public class GameFrame extends Game{
 	
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
 	nextPieces,  // the pieces that are next on the list
-	
+	dropPieces,
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
 	boolean spawn = !false, move = true, shuffle = true;
@@ -89,10 +89,9 @@ public class GameFrame extends Game{
 		
 		if(nextPieces.isEmpty()){
 			setUpNextPieces();
-			shuffle = false;
+			spawn(time);
 		}
-	
-		if(!nextPieces.isEmpty()){
+		else{
 			spawn(time);
 		}
 		
@@ -115,7 +114,7 @@ public class GameFrame extends Game{
 			
 		}
 		if(fallTime >= fallDelay) {
-			if(!currentPiece.onBottom()){
+			if(!currentPiece.collision()){
 				currentPiece.moveDown(speed);
 			}
 			else{
@@ -128,24 +127,21 @@ public class GameFrame extends Game{
 	
 	private void getInput() {
 		if(keyPressed(KeyEvent.VK_LEFT)) {
-			if(!currentPiece.leftClear(boardLocX, boardLocY) && !currentPiece.onBottom()){
-				currentPiece.moveLeft();
-			}
+				currentPiece.moveLeft(boardLocX);
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
-			if(!currentPiece.rightClear(boardLocX, boardLocY) && !currentPiece.onBottom()){
-				currentPiece.moveRight();
-			}
+				currentPiece.moveRight(boardLocX);
 		}
 		else if(keyPressed(KeyEvent.VK_UP)) {
 			
 		}
 		else if(keyDown(KeyEvent.VK_DOWN)) {
-			if(!currentPiece.onBottom())
+			if(!currentPiece.collision())
 				currentPiece.moveDown(speed);
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
 			currentPiece.quickDrop();
+			//spawn = true;
 		}
 		
 		
@@ -156,7 +152,6 @@ public class GameFrame extends Game{
 			
 		}
 	}
-	
 	
 	// put every type of tetriminos in availablepieces List
 	public void initializePieces(){
