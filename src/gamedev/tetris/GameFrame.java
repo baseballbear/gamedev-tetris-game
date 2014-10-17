@@ -163,12 +163,13 @@ public class GameFrame extends Game{
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
 		int x = 3, y = 0;
-		String block = "img/J block.png";
-		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY);
+		String block = "img/I block.png";
+		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
 		
-		block = "img/I block.png";
-		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY);
+		x = 3; y = -1;
+		block = "img/J block.png";
+		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
 		
 		block = "img/S block.png";
