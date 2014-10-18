@@ -1,16 +1,14 @@
 package gamedev.piece;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
+
+import java.awt.image.BufferedImage;
 
 public class LPiece extends Tetrimino{
 	int row = 3, col = 3;
 	
 	public LPiece(BufferedImage image, int x, int y, int boardX, int boardY){
-		name = "J";
 		initializeMatrix(image);
 		
 		matrix[1][0] = new Block(image, (x + 0) * width + boardX, (y + 1) * height + boardY);
@@ -25,7 +23,6 @@ public class LPiece extends Tetrimino{
 	}
 	
 	public void initializeMatrix(BufferedImage image){
-		name = "L";
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){
 			for(int j = 0; j < col; j++){

@@ -3,14 +3,12 @@ package gamedev.piece;
 import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class JPiece extends Tetrimino{
 	
 	private int row = 3, col = 3;
 	public JPiece(BufferedImage image, int x, int y, int boardX, int boardY){
-		name = "J";
 		initializeMatrix(image);
 		
 		matrix[1][2] = new Block(image, (x + 2) * width + boardX, (y + 1) * height + boardY);

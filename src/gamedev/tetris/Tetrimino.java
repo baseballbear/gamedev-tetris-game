@@ -7,7 +7,6 @@ public abstract class Tetrimino {
 	protected final int width = 25;
 	protected final int height = 25;
 	protected Block[][] matrix;
-	protected String name;
 	private int row, col;
 	
 	abstract public void rotateLeft();
@@ -56,7 +55,7 @@ public abstract class Tetrimino {
 		boolean invalid = false;
 		row = matrix.length;
 		
-		for(int i = 0; i < row; i++){
+		for(int i = 0; i < row && !invalid; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
 				if(matrix[i][j].isOccupied()){
@@ -123,11 +122,8 @@ public abstract class Tetrimino {
 	
 	}
 	
-	public String getName(){
-		return name;
-	}
 	
-	public void setName(String name){
-		this.name = name;
+	public Block[][] getMatrix() {
+		return matrix;
 	}
 }

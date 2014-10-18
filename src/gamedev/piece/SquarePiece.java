@@ -10,7 +10,6 @@ public class SquarePiece extends Tetrimino{
 	int row = 4, col = 4;
 	
 	public SquarePiece(BufferedImage image, int x, int y, int boardX, int boardY){
-		name = "O";
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){
 			for(int j = 0; j < col; j++){

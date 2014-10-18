@@ -11,7 +11,6 @@ public class LinePiece extends Tetrimino{
 	private int row = 4, col = 4;
 	
 	public LinePiece(BufferedImage image, int x, int y, int boardX, int boardY){
-		name = "|";
 		initializeMatrix(image);
 		
 		matrix[0][0] = new Block(image, (x + 0)* width + boardX,  y * height + boardY);
