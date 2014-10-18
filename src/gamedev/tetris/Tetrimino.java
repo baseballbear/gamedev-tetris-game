@@ -12,7 +12,6 @@ public abstract class Tetrimino {
 	
 	abstract public void rotateLeft();
 	abstract public void rotateRight();
-	abstract public void draw();
 	
 	public void render(Graphics2D g){
 		int row = matrix.length;

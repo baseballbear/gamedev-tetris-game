@@ -44,12 +44,6 @@ public class SPiece extends Tetrimino{
 		
 	}
 	
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 	
 }

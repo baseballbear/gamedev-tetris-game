@@ -47,11 +47,6 @@ public class LPiece extends Tetrimino{
 		
 	}
 	
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	

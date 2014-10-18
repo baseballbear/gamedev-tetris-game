@@ -45,11 +45,6 @@ public class JPiece extends Tetrimino{
 		
 	}
 
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	

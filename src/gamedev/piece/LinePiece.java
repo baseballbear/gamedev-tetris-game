@@ -45,12 +45,5 @@ public class LinePiece extends Tetrimino{
 		
 	}
 	
-
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 }

@@ -40,12 +40,6 @@ public class SquarePiece extends Tetrimino{
 		
 	}
 	
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 
 	
 }

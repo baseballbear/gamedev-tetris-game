@@ -47,12 +47,7 @@ public class ZPiece extends Tetrimino{
 		
 	}
 
-	
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
-	}
+
 	
 	
 	
