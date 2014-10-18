@@ -3,7 +3,6 @@ package gamedev.piece;
 import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class SPiece extends Tetrimino{

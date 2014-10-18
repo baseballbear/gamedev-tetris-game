@@ -1,10 +1,9 @@
 package gamedev.piece;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
+
+import java.awt.image.BufferedImage;
 
 public class SquarePiece extends Tetrimino{
 	
