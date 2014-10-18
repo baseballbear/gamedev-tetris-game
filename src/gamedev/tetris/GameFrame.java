@@ -184,10 +184,10 @@ public class GameFrame extends Game{
 			if(currentPiece.getY() + currentPiece.getRow() >= height)
 				return true;
 			for(int j = 0; j < col; j++){
-				i = row - 1;
-				if(currentPiece.matrix[i][j].isOccupied())
-					if(board[currentPiece.getX()][currentPiece.getY() + i + 1].isOccupied())
-						return true;
+				for(i = row - 2; i <= row - 1; i++)
+					if(currentPiece.matrix[i][j].isOccupied())
+						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied())
+							return true;
 			}
 			return false;
 		case Right:
