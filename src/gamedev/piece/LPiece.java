@@ -9,8 +9,8 @@ public class LPiece extends Tetrimino{
 	int row = 3, col = 3;
 	
 	public LPiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		super(x,y);
 		initializeMatrix(image);
-		
 		matrix[1][0] = new Block(image, (x + 0) * width + boardX, (y + 1) * height + boardY);
 		matrix[2][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
 		matrix[2][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);

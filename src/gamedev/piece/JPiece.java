@@ -7,10 +7,11 @@ import java.awt.image.BufferedImage;
 
 public class JPiece extends Tetrimino{
 	
-	private int row = 3, col = 3;
 	public JPiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		super(x,y);
+		setCol(3);
+		setRow(3);
 		initializeMatrix(image);
-		
 		matrix[1][2] = new Block(image, (x + 2) * width + boardX, (y + 1) * height + boardY);
 		matrix[2][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
 		matrix[2][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);

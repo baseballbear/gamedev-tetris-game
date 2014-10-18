@@ -5,14 +5,13 @@ import gamedev.piece.LPiece;
 import gamedev.piece.LinePiece;
 import gamedev.piece.SPiece;
 import gamedev.piece.SquarePiece;
+import gamedev.piece.TPiece;
 import gamedev.piece.ZPiece;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +30,9 @@ public class GameFrame extends Game{
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
 	boolean spawn = !false, move = true, shuffle = true;
+	public enum Direction{
+		Left, Down, Right;
+	}
  	
 	long fallTime, fallDelay = 500;
 	
@@ -66,12 +68,13 @@ public class GameFrame extends Game{
 	
 	@Override
 	public void render(Graphics2D gd) {
+		
 		gd.setColor(Color.black);
 		gd.fillRect(0, 0, getWidth(), getHeight());
 		
 		gd.setColor(Color.white);
 		gd.drawImage(getImage("img/board.png"), boardLocX - 15, boardLocY - 15, null);
-		
+
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				board[i][j].render(gd);
@@ -83,7 +86,6 @@ public class GameFrame extends Game{
 	@Override
 	public void update(long time) {
 		// TODO Auto-generated method stub
-		getInput();
 		
 		fallTime += time;
 		
@@ -94,6 +96,7 @@ public class GameFrame extends Game{
 		else{
 			spawn(time);
 		}
+		getInput();
 		
 	}
 	
@@ -114,10 +117,14 @@ public class GameFrame extends Game{
 			
 		}
 		if(fallTime >= fallDelay) {
-			if(!currentPiece.collision()){
+			if(!checkCollision(GameFrame.Direction.Down)){
 				currentPiece.moveDown(speed);
 			}
 			else{
+				for(int i = 0; i < currentPiece.row; i++)
+					for(int j = 0; j < currentPiece.col; j++)
+						if(currentPiece.matrix[i][j].isOccupied())
+							board[currentPiece.getX() + j][currentPiece.getY() + i] = currentPiece.matrix[i][j];
 				spawn = true;
 			}
 			fallTime -= fallDelay;
@@ -127,20 +134,23 @@ public class GameFrame extends Game{
 	
 	private void getInput() {
 		if(keyPressed(KeyEvent.VK_LEFT)) {
+			if(!checkCollision(Direction.Left)){
 				currentPiece.moveLeft(boardLocX);
+			}
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
+			if(!checkCollision(Direction.Right))
 				currentPiece.moveRight(boardLocX);
 		}
 		else if(keyPressed(KeyEvent.VK_UP)) {
 			
 		}
 		else if(keyDown(KeyEvent.VK_DOWN)) {
-			if(!currentPiece.collision())
+			if(!checkCollision(Direction.Down))
 				currentPiece.moveDown(speed);
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
-			currentPiece.quickDrop();
+			//currentPiece.quickDrop();
 			//spawn = true;
 		}
 		
@@ -152,12 +162,56 @@ public class GameFrame extends Game{
 			
 		}
 	}
+		
+	public boolean checkCollision(Direction d){
+		int row = currentPiece.matrix.length;
+		int col = currentPiece.matrix[0].length;
+		int i;
+		switch(d){
+		case Left:
+			if(currentPiece.getX() <= 0)
+				return true;
+			for(i = 0; i < col; i++){
+				for(int j = 0; j < row; j++){
+					if(currentPiece.matrix[j][i].isOccupied())
+						if(board[currentPiece.getX() + i - 1][currentPiece.getY() + j].isOccupied())
+							return true;
+				}
+			}
+			return false;
+			
+		case Down:
+			if(currentPiece.getY() + currentPiece.getRow() >= height)
+				return true;
+			for(int j = 0; j < col; j++){
+				i = row - 1;
+				if(currentPiece.matrix[i][j].isOccupied())
+					if(board[currentPiece.getX()][currentPiece.getY() + i + 1].isOccupied())
+						return true;
+			}
+			return false;
+		case Right:
+			if(currentPiece.getX() >= width - currentPiece.getCol())
+				return true;
+			for(i = col - 1; i >= 0; i--){
+				for(int j = 0; j < row; j++){
+					if(currentPiece.matrix[j][i].isOccupied())
+						if(board[currentPiece.getX() + col][currentPiece.getY() + j].isOccupied())
+							return true;
+				}
+			}
+			return false;
+			
+		}
+		
+		return false;
+	}
 	
 	// put every type of tetriminos in availablepieces List
 	public void initializePieces(){
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
-		int x = 3, y = 0;
+		int x = 3, y = -3;
 		String block = "img/I block.png";
 		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
@@ -178,13 +232,13 @@ public class GameFrame extends Game{
 		block = "img/L block.png";
 		t = new LPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
-/*		
+		
 		block = "img/T block.png";
 		t = new TPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
-*/
+		
 		block = "img/square Block.png";
-		t = new SquarePiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY);
 		availablePieces.add(t);
 		
 	}

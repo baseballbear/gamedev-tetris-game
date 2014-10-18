@@ -8,8 +8,10 @@ import java.awt.image.BufferedImage;
 
 public class SPiece extends Tetrimino{
 
-	int row = 3, col = 3;
 	public SPiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		super(x,y);
+		setCol(3);
+		setRow(3);
 		initializeMatrix(image);
 		
 		matrix[1][1] = new Block(image, (x + 1) * width + boardX, (y + 1) * height + boardY);

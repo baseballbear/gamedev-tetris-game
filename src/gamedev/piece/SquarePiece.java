@@ -7,20 +7,16 @@ import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
 
 public class SquarePiece extends Tetrimino{
-	int row = 4, col = 4;
 	
 	public SquarePiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		super(x,y);
+		setRow(2);
+		setCol(2);
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){
 			for(int j = 0; j < col; j++){
-				if(i >=1 && i <= 2 && j >= 1 && j <= 2){
 					matrix[i][j] = new Block(image, (x + j) * width + boardX, (y + i) * height + boardY);
 					matrix[i][j].setOccupied(true);
-				}
-				else{
-					matrix[i][j] = new Block();
-					matrix[i][j].setOccupied(false);
-				}
 			}
 		}
 		
@@ -38,6 +34,7 @@ public class SquarePiece extends Tetrimino{
 		// TODO Auto-generated method stub
 		
 	}
+	
 	
 
 	

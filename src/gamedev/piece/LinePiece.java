@@ -8,20 +8,20 @@ import java.awt.image.BufferedImage;
 
 public class LinePiece extends Tetrimino{
 	
-	private int row = 4, col = 4;
-	
 	public LinePiece(BufferedImage image, int x, int y, int boardX, int boardY){
+		super(x,y);
+		setCol(4);
+		setRow(4);
 		initializeMatrix(image);
-		
-		matrix[0][0] = new Block(image, (x + 0)* width + boardX,  y * height + boardY);
-		matrix[0][1] = new Block(image, (x + 1) * width + boardX, y * height + boardY);
-		matrix[0][2] = new Block(image, (x + 2) * width + boardX, y * height + boardY);
-		matrix[0][3] = new Block(image, (x + 3) * width + boardX, y * height + boardY);
+		matrix[3][0] = new Block(image, (x + 0)* width + boardX,  (y + 3) * height + boardY);
+		matrix[3][1] = new Block(image, (x + 1) * width + boardX, (y + 3) * height + boardY);
+		matrix[3][2] = new Block(image, (x + 2) * width + boardX, (y + 3) * height + boardY);
+		matrix[3][3] = new Block(image, (x + 3) * width + boardX, (y + 3) * height + boardY);
 	
-		matrix[0][0].setOccupied(true);
-		matrix[0][1].setOccupied(true);
-		matrix[0][2].setOccupied(true);
-		matrix[0][3].setOccupied(true);
+		matrix[3][0].setOccupied(true);
+		matrix[3][1].setOccupied(true);
+		matrix[3][2].setOccupied(true);
+		matrix[3][3].setOccupied(true);
 	}
 	public void initializeMatrix(BufferedImage image){
 		matrix = new Block[row][col];

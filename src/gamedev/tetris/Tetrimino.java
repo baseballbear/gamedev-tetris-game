@@ -6,11 +6,18 @@ public abstract class Tetrimino {
 	
 	protected final int width = 25;
 	protected final int height = 25;
+	//x and y in the board
+	protected int x, y;
 	protected Block[][] matrix;
-	private int row, col;
+	protected int row, col;
 	
 	abstract public void rotateLeft();
 	abstract public void rotateRight();
+	
+	public Tetrimino(int x, int y){
+		this.x = x;
+		this.y = y;
+	}
 	
 	public void render(Graphics2D g){
 		int row = matrix.length;
@@ -25,61 +32,33 @@ public abstract class Tetrimino {
 	}
 	
 	public void moveLeft(int boardX) {
-		boolean invalid = false;
+
 		row = matrix.length;
-		int tempRow, tempCol;
-		
+		--x;
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
 				if(matrix[i][j].isOccupied()){
-					if((matrix[i][j].getX() < (1 * width) + boardX)){
-						invalid = true;
-					}
-				}
-			}
-		}
-		
-		if(!invalid){
-			for(int i = 0; i < row; i++){
-				col = matrix[i].length;
-				for(int j = 0; j < col; j++){
-					if(matrix[i][j].isOccupied()){
-						matrix[i][j].setX(matrix[i][j].getX() - 1*width);
-					}
+					matrix[i][j].setX(matrix[i][j].getX() - width);
 				}
 			}
 		}
 	}
 	public void moveRight(int boardX) {
-		boolean invalid = false;
+		++x;
 		row = matrix.length;
-		
-		for(int i = 0; i < row && !invalid; i++){
+		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
 				if(matrix[i][j].isOccupied()){
-					if((matrix[i][j].getX() > (8 * width) + boardX)){
-						invalid = true;
-					}
+					matrix[i][j].setX(matrix[i][j].getX() + width);
 				}
 			}
-		}
-		
-		if(!invalid){
-			for(int i = 0; i < row; i++){
-				col = matrix[i].length;
-				for(int j = 0; j < col; j++){
-					if(matrix[i][j].isOccupied()){
-						matrix[i][j].setX(matrix[i][j].getX() + 1*width);
-					}
-				}
-			}
-			
 		}
 	}
 	
 	public void moveDown(double speed) {
+		++y;
 		row = matrix.length;
 		
 		for(int i = 0; i < row; i++){
@@ -90,40 +69,34 @@ public abstract class Tetrimino {
 		}
 	}
 	
-	public boolean collision() {
-		row = matrix.length;
-		
-		for(int i = 0; i < row; i++){
-			col = matrix[i].length;
-			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied()){
-					if(matrix[i][j].getY() > (21 * height)){
-						return true;
-					}
-				}
-				
-			}
-		}
-		return false;
-	}
-	
-	public void quickDrop(){
-		row = matrix.length;
-		
-		for(int i = 0; i < row; i++){
-			col = matrix[i].length;
-			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied()){
-					while(!collision())
-					moveDown(1);
-				}
-			}
-		}
-	
-	}
-	
-	
 	public Block[][] getMatrix() {
 		return matrix;
 	}
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public int getRow() {
+		return row;
+	}
+	protected void setRow(int row) {
+		this.row = row;
+	}
+	public int getCol() {
+		return col;
+	}
+	protected void setCol(int col) {
+		this.col = col;
+	}
+	
+	
+	
 }
