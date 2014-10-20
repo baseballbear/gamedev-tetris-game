@@ -9,6 +9,7 @@ import gamedev.piece.TPiece;
 import gamedev.piece.ZPiece;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -83,6 +84,10 @@ public class GameFrame extends Game{
 			}
 		}
 		displayNext(gd);
+		if(isTopOccupied()){
+			gameOver(gd);
+		}
+		else
 		currentPiece.render(gd);
 	}
 	
@@ -104,14 +109,6 @@ public class GameFrame extends Game{
 		}
 		getInput();
 
-		for(int i = 0; i < height; i++) {
-			for(int j = 0; j < width; j++) {
-				if(board[j][i].isOccupied())
-					System.out.print("*");
-				else System.out.print(" ");
-			}
-			System.out.println();
-		}
 	}
 	
 	private void checkLine() {
@@ -187,6 +184,33 @@ public class GameFrame extends Game{
 		
 	}
 	
+	public boolean isTopOccupied(){
+		
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < 2; j++){
+				if(board[i][j].isOccupied()){
+					return true;
+				}
+				
+			}
+		}
+		return false;
+			
+		
+	}
+	
+	//temporary lang to 
+	private void gameOver(Graphics2D gd){
+		spawn = false;
+		Font big = new Font("Berlin Sans FB Demi", Font.BOLD, 60);
+		
+		gd.setColor(Color.black);
+		gd.fillRect(0, 0, getWidth(), getHeight());
+		gd.setColor(Color.yellow);
+		gd.setFont(big);
+		gd.drawString("Game Over", getWidth()/2 - 150, getHeight()/2);
+	}
+	
 	private void getInput() {
 		if(keyPressed(KeyEvent.VK_LEFT)) {
 			if(!checkCollision(Direction.Left)){
@@ -207,6 +231,8 @@ public class GameFrame extends Game{
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
 			//currentPiece.quickDrop();
 			//spawn = true;
+		}else if(keyPressed(KeyEvent.VK_R)) {
+		//	initResources();
 		}
 		
 		
@@ -221,9 +247,7 @@ public class GameFrame extends Game{
 		int locx = boardLocX + 280;
 		int locy = 0;
 		for(int i = 0; i < 5; i++){
-		
-				locy = boardLocY + 170 + i*70;
-			
+			locy = boardLocY + 170 + i*70;
 			gd.drawImage(getImage("img/smallpieces/" + nextPieces.get(i).getImageName() + ".png"), locx, locy, null);
 		}
 	}
