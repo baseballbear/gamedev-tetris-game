@@ -11,6 +11,7 @@ public abstract class Tetrimino {
 	protected Block[][] matrix;
 	protected int row, col;
 	protected String imageName;
+	protected int boardX, boardY;
 	
 	abstract public void rotateLeft();
 	abstract public void rotateRight();
@@ -70,6 +71,9 @@ public abstract class Tetrimino {
 		}
 	}
 	
+	public void setLocation(int x, int y){
+		
+	}
 	public Block[][] getMatrix() {
 		return matrix;
 	}

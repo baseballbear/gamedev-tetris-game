@@ -11,6 +11,8 @@ public class LinePiece extends Tetrimino{
 		super(x,y);
 		setCol(4);
 		setRow(4);
+		this.boardX = boardX;
+		this.boardY = boardY;
 		initializeMatrix(image);
 		super.imageName = "small_i3";
 		matrix[3][0] = new Block(image, (x + 0)* width + boardX,  (y + 3) * height + boardY);
@@ -23,6 +25,22 @@ public class LinePiece extends Tetrimino{
 		matrix[3][2].setOccupied(true);
 		matrix[3][3].setOccupied(true);
 	}
+	
+	public void setLocation(int x, int y){
+		matrix[3][0].setX((x + 0) * width + boardX);
+		matrix[3][0].setY((y + 3) * height + boardY);
+		
+		matrix[3][1].setX((x + 1) * width + boardX);
+		matrix[3][1].setY((y + 3) * height + boardY);
+		
+		matrix[3][2].setX((x + 2) * width + boardX);
+		matrix[3][2].setY((y + 3) * height + boardY);
+		
+		matrix[3][3].setX((x + 3) * width + boardX);
+		matrix[3][3].setY((y + 3) * height + boardY);
+		
+	}
+	
 	public void initializeMatrix(BufferedImage image){
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){

@@ -12,6 +12,8 @@ public class LPiece extends Tetrimino{
 		super(x,y);
 		initializeMatrix(image);
 		super.imageName = "small_L";
+		this.boardX = boardX;
+		this.boardY = boardY;
 		matrix[1][2] = new Block(image, (x + 2) * width + boardX, (y + 1) * height + boardY);
 		matrix[2][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
 		matrix[2][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);
@@ -23,6 +25,20 @@ public class LPiece extends Tetrimino{
 		matrix[2][2].setOccupied(true);
 	}
 	
+	public void setLocation(int x, int y){
+		matrix[1][2].setX((x + 2) * width + boardX);
+		matrix[1][2].setY((y + 1) * height + boardY);
+		
+		matrix[2][0].setX((x + 0) * width + boardX);
+		matrix[2][0].setY((y + 2) * height + boardY);
+		
+		matrix[2][1].setX((x + 1) * width + boardX);
+		matrix[2][1].setY((y + 2) * height + boardY);
+		
+		matrix[2][2].setX((x + 2) * width + boardX);
+		matrix[2][2].setY((y + 2) * height + boardY);
+		
+	}
 	public void initializeMatrix(BufferedImage image){
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){

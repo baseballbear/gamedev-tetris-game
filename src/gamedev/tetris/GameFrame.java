@@ -22,7 +22,7 @@ public class GameFrame extends Game{
 
 	private int width = 10, height = 20, 
 			size = 25, boardLocX, boardLocY,
-			numOfPieces = 6, timer = 0, speed = 1;
+			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0;
 	private Block[][] board;
 	
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -31,7 +31,7 @@ public class GameFrame extends Game{
 	dropPieces,
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
-	boolean spawn = !false, move = true, shuffle = true;
+	boolean spawn = !false, move = true, shuffle = true, save = false;
 	public enum Direction{
 		Left, Down, Right;
 	}
@@ -46,6 +46,7 @@ public class GameFrame extends Game{
 		board = new Block[width][height];
 		nextPieces = new ArrayList<Tetrimino>();
 		nextPieces2 = new ArrayList<Tetrimino>();
+		savedPieces = new ArrayList<Tetrimino>();
 		boardLocX = (getWidth() / 2) - (width*size)/2;
 		boardLocY = (getHeight() / 2) - (height*size)/2;
 		initializeBoard();
@@ -54,6 +55,7 @@ public class GameFrame extends Game{
 	}
 	
 	private void initGameState() {
+		saveCount = 0;
 		fallTime = 0;
 		fallDelay = 900;
 		
@@ -83,7 +85,11 @@ public class GameFrame extends Game{
 				board[i][j].render(gd);
 			}
 		}
-		displayNext(gd);
+		
+		if(!nextPieces.isEmpty())
+			displayNext(gd);
+		if(!savedPieces.isEmpty())
+			displaySaved(gd);
 		if(isTopOccupied()){
 			gameOver(gd);
 		}
@@ -134,6 +140,7 @@ public class GameFrame extends Game{
 				}
 			}
 			lineComplete = true;
+			
 		}
 		
 	}
@@ -195,8 +202,6 @@ public class GameFrame extends Game{
 			}
 		}
 		return false;
-			
-		
 	}
 	
 	//temporary lang to 
@@ -232,7 +237,23 @@ public class GameFrame extends Game{
 			//currentPiece.quickDrop();
 			//spawn = true;
 		}else if(keyPressed(KeyEvent.VK_R)) {
-		//	initResources();
+			//	initResources();
+		}else if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
+				if(savedPieces.size() < 3){
+					savedPieces.add(currentPiece);
+					spawn = true;
+					saveCount++;
+				}
+				else{
+				//	if(saveCount < 2){
+						Tetrimino piece = savedPieces.get(0);
+						savedPieces.remove(0);
+						savedPieces.add(currentPiece);
+						piece.setLocation(3, 0);
+						currentPiece = piece;
+				//	}
+				}
+			
 		}
 		
 		
@@ -249,6 +270,15 @@ public class GameFrame extends Game{
 		for(int i = 0; i < 5; i++){
 			locy = boardLocY + 170 + i*70;
 			gd.drawImage(getImage("img/smallpieces/" + nextPieces.get(i).getImageName() + ".png"), locx, locy, null);
+		}
+	}
+	
+	private void displaySaved(Graphics2D gd){
+		int locx = boardLocX - 100;
+		int locy = 0;
+		for(int i = 0; i < savedPieces.size(); i++){
+			locy = boardLocY + 10 + i * 60;
+			gd.drawImage(getImage("img/smallpieces/" + savedPieces.get(i).getImageName() + ".png"), locx, locy, null);
 		}
 	}
 	
@@ -275,8 +305,9 @@ public class GameFrame extends Game{
 			for(int j = 0; j < col; j++){
 				for(i = row - 2; i <= row - 1; i++)
 					if(currentPiece.matrix[i][j].isOccupied())
-						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied())
+						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied()){
 							return true;
+						}
 			}
 			return false;
 		case Right:
