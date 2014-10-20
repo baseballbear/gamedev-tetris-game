@@ -10,6 +10,7 @@ public abstract class Tetrimino {
 	protected int x, y;
 	protected Block[][] matrix;
 	protected int row, col;
+	protected String imageName;
 	
 	abstract public void rotateLeft();
 	abstract public void rotateRight();
@@ -95,6 +96,12 @@ public abstract class Tetrimino {
 	}
 	protected void setCol(int col) {
 		this.col = col;
+	}
+	public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
 	}
 	
 	

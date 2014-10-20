@@ -12,6 +12,7 @@ public class JPiece extends Tetrimino{
 		setCol(3);
 		setRow(3);
 		initializeMatrix(image);
+		super.imageName = "small_j";
 		matrix[1][0] = new Block(image, (x + 0) * width + boardX, (y + 1) * height + boardY);
 		matrix[2][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
 		matrix[2][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);

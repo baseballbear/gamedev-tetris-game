@@ -12,6 +12,7 @@ public class LinePiece extends Tetrimino{
 		setCol(4);
 		setRow(4);
 		initializeMatrix(image);
+		super.imageName = "small_i3";
 		matrix[3][0] = new Block(image, (x + 0)* width + boardX,  (y + 3) * height + boardY);
 		matrix[3][1] = new Block(image, (x + 1) * width + boardX, (y + 3) * height + boardY);
 		matrix[3][2] = new Block(image, (x + 2) * width + boardX, (y + 3) * height + boardY);

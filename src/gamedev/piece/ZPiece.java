@@ -14,6 +14,7 @@ public class ZPiece extends Tetrimino{
 		setCol(3);
 		setRow(3);
 		initializeMatrix(image);
+		super.imageName = "small_z";
 		
 		matrix[1][0] = new Block(image, (x + 0) * width + boardX, (y + 1) * height + boardY);
 		matrix[1][1] = new Block(image, (x + 1) * width + boardX, (y + 1) * height + boardY);

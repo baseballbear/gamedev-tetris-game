@@ -11,6 +11,7 @@ public class LPiece extends Tetrimino{
 	public LPiece(BufferedImage image, int x, int y, int boardX, int boardY){
 		super(x,y);
 		initializeMatrix(image);
+		super.imageName = "small_L";
 		matrix[1][2] = new Block(image, (x + 2) * width + boardX, (y + 1) * height + boardY);
 		matrix[2][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
 		matrix[2][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);

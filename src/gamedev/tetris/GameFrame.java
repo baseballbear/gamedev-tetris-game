@@ -26,6 +26,7 @@ public class GameFrame extends Game{
 	
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
 	nextPieces,  // the pieces that are next on the list
+	nextPieces2,
 	dropPieces,
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
@@ -43,6 +44,7 @@ public class GameFrame extends Game{
 	public void initResources() {
 		board = new Block[width][height];
 		nextPieces = new ArrayList<Tetrimino>();
+		nextPieces2 = new ArrayList<Tetrimino>();
 		boardLocX = (getWidth() / 2) - (width*size)/2;
 		boardLocY = (getHeight() / 2) - (height*size)/2;
 		initializeBoard();
@@ -73,13 +75,14 @@ public class GameFrame extends Game{
 		gd.fillRect(0, 0, getWidth(), getHeight());
 		
 		gd.setColor(Color.white);
-		gd.drawImage(getImage("img/board.png"), boardLocX - 15, boardLocY - 15, null);
+		gd.drawImage(getImage("img/board.png"), boardLocX - 126, boardLocY - 15, null);
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				board[i][j].render(gd);
 			}
 		}
+		displayNext(gd);
 		currentPiece.render(gd);
 	}
 	
@@ -89,30 +92,82 @@ public class GameFrame extends Game{
 		
 		fallTime += time;
 		
+		if(nextPieces2.isEmpty()){
+			setUpNextPieces("nextPieces2");
+		}
 		if(nextPieces.isEmpty()){
-			setUpNextPieces();
+			setUpNextPieces("nextPieces");
 			spawn(time);
 		}
 		else{
 			spawn(time);
 		}
 		getInput();
-		
+
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				if(board[j][i].isOccupied())
+					System.out.print("*");
+				else System.out.print(" ");
+			}
+			System.out.println();
+		}
 	}
 	
-	public void setUpNextPieces(){
-		initializePieces();
-		for(int i = 0; i < availablePieces.size(); i++){
-			nextPieces.add(availablePieces.get(i));
-			Collections.shuffle(nextPieces);
+	private void checkLine() {
+		boolean lineComplete = true;
+		
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				if(!board[j][i].isOccupied())
+					lineComplete = false;
+			}
+			if(lineComplete) {
+				for(int n = i; n > 0; n--) {
+					for(int m = 0; m < width; m++) {
+						board[m][n].setOccupied(board[m][n - 1].isOccupied());
+						board[m][n].setImage(board[m][n - 1].getImage());
+					}
+				}
+				String image = "img/empty.png";
+				
+				for(int m = 0; m < width; m++) {
+					board[m][0].setOccupied(false);
+					board[m][0].setImage(getImage(image));
+				}
+			}
+			lineComplete = true;
 		}
+		
+	}
+
+	public void setUpNextPieces(String listName){
+		initializePieces();
+		
+		for(int i = 0; i < availablePieces.size(); i++){
+			if(listName.equals("nextPieces")){
+				nextPieces.add(availablePieces.get(i));
+				Collections.shuffle(nextPieces);
+			}
+			else if(listName.equals("nextPieces2")){
+				nextPieces2.add(availablePieces.get(i));
+				Collections.shuffle(nextPieces2);
+			}
+		}
+		
 	}
 	
 	public void spawn(long time){
 		
+		checkLine();
+		
 		if(spawn){
 			currentPiece = nextPieces.get(0);
 			nextPieces.remove(0);
+			if(nextPieces.size() < 5){
+				nextPieces.add(nextPieces2.get(0));	
+				nextPieces2.remove(0);
+			}
 			spawn = false;
 			
 		}
@@ -162,7 +217,17 @@ public class GameFrame extends Game{
 			
 		}
 	}
+	private void displayNext(Graphics2D gd){
+		int locx = boardLocX + 280;
+		int locy = 0;
+		for(int i = 0; i < 5; i++){
 		
+				locy = boardLocY + 170 + i*70;
+			
+			gd.drawImage(getImage("img/smallpieces/" + nextPieces.get(i).getImageName() + ".png"), locx, locy, null);
+		}
+	}
+	
 	public boolean checkCollision(Direction d){
 		int row = currentPiece.matrix.length;
 		int col = currentPiece.matrix[0].length;

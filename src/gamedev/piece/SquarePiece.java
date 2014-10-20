@@ -11,6 +11,8 @@ public class SquarePiece extends Tetrimino{
 		super(x,y);
 		setRow(2);
 		setCol(2);
+		super.imageName = "small_square";
+		
 		matrix = new Block[row][col];
 		for(int i = 0; i < row; i++){
 			for(int j = 0; j < col; j++){
