@@ -43,7 +43,8 @@ public class GameFrame extends Game{
 		PAUSE_SCREEN
 	}
 	Screen currentScreen;
-	List<Button> menuButtons;
+	List<Button> menuButtons,
+	pauseButtons;
 	
 	long fallTime, fallDelay = 500;
 
@@ -70,6 +71,13 @@ public class GameFrame extends Game{
 		menuButtons.add(new Button(getImage("img/buttons/highscores.png"), 0, 70, "Highscores"));
 		menuButtons.add(new Button(getImage("img/buttons/help.png"), 0, 140, "Help"));
 		menuButtons.add(new Button(getImage("img/buttons/settings.png"), 0, 210, "Settings"));
+
+		pauseButtons = new ArrayList<Button>();
+		pauseButtons.add(new Button(getImage("img/buttons/temp.png"), 0, 0, "Resume"));
+		pauseButtons.add(new Button(getImage("img/buttons/temp.png"), 0, 70, "Restart"));
+		pauseButtons.add(new Button(getImage("img/buttons/temp.png"), 0, 140, "ExitToMainMenu"));
+		
+		
 	}
 
 	private void initGameState() {
@@ -123,6 +131,10 @@ public class GameFrame extends Game{
 					b.render(gd);
 				break;
 			case GAME_OVER:
+				break;
+			case PAUSE_SCREEN:
+				for(Button b : pauseButtons)
+					b.render(gd);
 				break;
 			default:
 				break;
@@ -409,13 +421,20 @@ public class GameFrame extends Game{
 	}
 
 	private void getPauseMenuInput() {
-		if(keyPressed(KeyEvent.VK_R)) {
-			initializeBoard();
-			initGameState();
-			initializePieces();
-			currentScreen = Screen.GAME_SCREEN;
-		} else if(keyPressed(KeyEvent.VK_Q)) {
-			currentScreen = Screen.MAIN_MENU;
+		if(click()) {
+			int x = getMouseX(), y = getMouseY();
+			for(Button b : pauseButtons)
+				if(b.contains(x, y))
+					if(b.getBtnName().equals("Restart")) {
+						initializeBoard();
+						initGameState();
+						initializePieces();
+						currentScreen = Screen.GAME_SCREEN;
+					} else if(b.getBtnName().equals("ExitToMainMenu")) {
+						currentScreen = Screen.MAIN_MENU;
+					} else if(b.getBtnName().equals("Resume")) {
+						currentScreen = Screen.GAME_SCREEN;
+					}
 		}
 			
 	}
