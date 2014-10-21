@@ -19,6 +19,13 @@ public class Block extends Sprite{
 		this.occupied = occupied;
 	}
 	
+	
+	//copy constructor
+	public Block(Block block) {
+		super(block.getImage(), block.getX(), block.getY());
+		this.occupied = false;
+	}
+
 	public boolean isOccupied() {
 		return occupied;
 	}

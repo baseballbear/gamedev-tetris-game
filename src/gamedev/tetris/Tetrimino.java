@@ -1,6 +1,7 @@
 package gamedev.tetris;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public abstract class Tetrimino {
 	
@@ -13,8 +14,6 @@ public abstract class Tetrimino {
 	protected String imageName;
 	protected int boardX, boardY;
 	
-	abstract public void rotateLeft();
-	abstract public void rotateRight();
 	
 	public Tetrimino(int x, int y){
 		this.x = x;
@@ -40,9 +39,7 @@ public abstract class Tetrimino {
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied()){
 					matrix[i][j].setX(matrix[i][j].getX() - width);
-				}
 			}
 		}
 	}
@@ -52,9 +49,7 @@ public abstract class Tetrimino {
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied()){
 					matrix[i][j].setX(matrix[i][j].getX() + width);
-				}
 			}
 		}
 	}
@@ -70,6 +65,8 @@ public abstract class Tetrimino {
 			}
 		}
 	}
+	
+	
 	
 	public void setLocation(int x, int y){
 		
@@ -109,5 +106,54 @@ public abstract class Tetrimino {
 	}
 	
 	
+	public void rotateLeft(){
+		Block[][] temp = new Block[row][col];
+		
+		for(int i = 0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				temp[i][j] = new Block(matrix[i][j]);
+			}
+		}
+		for(int i = 0; i < row; i++){
+			for(int j = row - 1, k = 0; k < col && j >= 0; j--, k++){
+				
+				if(matrix[i][k].isOccupied()){
+					temp[j][i].setOccupied(true);
+				}
+			}
+		}
+		
+		matrix = temp;
+	}
+	
+	public void rotateRight(){
+		Block[][] temp = new Block[row][col];
+		
+		for(int i = 0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				temp[i][j] = new Block(matrix[i][j]);
+			}
+		}
+		for(int i = 0,  j = row - 1; i < row && j >= 0; i++, j--){
+			for(int k = 0; k < col;k++){
+				
+				if(matrix[i][k].isOccupied()){
+					temp[k][j].setOccupied(true);
+				}
+			}
+		}
+		
+		matrix = temp;
+	}
+	
+	public void initializeMatrix(BufferedImage image){
+		matrix = new Block[row][col];
+		for(int i = 0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				matrix[i][j] = new Block(image, (x + j) * width + boardX, (y + i) * height + boardY);
+				matrix[i][j].setOccupied(false);
+			}
+		}
+	}
 	
 }

@@ -258,9 +258,10 @@ public class GameFrame extends Game{
 		
 		
 		if(keyPressed('Z')) {
-			
+			currentPiece.rotateLeft();
 		}
 		else if(keyPressed('X')) {
+			currentPiece.rotateRight();
 			
 		}
 	}
