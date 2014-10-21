@@ -16,15 +16,10 @@ public class TPiece extends Tetrimino{
 		initializeMatrix(image);
 		super.imageName = "small_t";
 		
-		matrix[0][1] = new Block(image, (x + 1) * width + boardX, (y + 1) * height + boardY);
-		matrix[1][0] = new Block(image, (x + 0) * width + boardX, (y + 2) * height + boardY);
-		matrix[1][1] = new Block(image, (x + 1) * width + boardX, (y + 2) * height + boardY);
-		matrix[1][2] = new Block(image, (x + 2) * width + boardX, (y + 2) * height + boardY);
-		
+		matrix[0][1].setOccupied(true);
+		matrix[1][0].setOccupied(true);
 		matrix[1][1].setOccupied(true);
-		matrix[2][0].setOccupied(true);
-		matrix[2][1].setOccupied(true);
-		matrix[2][2].setOccupied(true);
+		matrix[1][2].setOccupied(true);
 	}
 	public void setLocation(int x, int y){
 		matrix[1][1].setX((x + 1) * width + boardX);

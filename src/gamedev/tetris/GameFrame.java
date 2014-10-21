@@ -359,8 +359,12 @@ public class GameFrame extends Game{
 			return false;
 
 		case Down:
-			if(currentPiece.getY() + currentPiece.getRow() >= height)
-				return true;
+			if(currentPiece.getY() + currentPiece.getRow() >= height){
+				for(i = 0; i < col; i++)
+					if(currentPiece.matrix[currentPiece.getRow() - 1][i].isOccupied() || currentPiece.getY() + currentPiece.getRow() > height)
+						return true;
+				return false;
+			}
 			for(int j = 0; j < col; j++){
 				for(i = row - 2; i <= row - 1; i++)
 					if(currentPiece.matrix[i][j].isOccupied())
@@ -375,7 +379,7 @@ public class GameFrame extends Game{
 			for(i = col - 1; i >= 0; i--){
 				for(int j = 0; j < row; j++){
 					if(currentPiece.matrix[j][i].isOccupied())
-						if(board[currentPiece.getX() + col][currentPiece.getY() + j].isOccupied())
+						if(board[currentPiece.getX() + i + 1][currentPiece.getY() + j].isOccupied())
 							return true;
 				}
 			}
