@@ -16,10 +16,10 @@ public class LinePiece extends Tetrimino{
 		initializeMatrix(image);
 		super.imageName = "small_i3";
 	
-		matrix[3][0].setOccupied(true);
-		matrix[3][1].setOccupied(true);
-		matrix[3][2].setOccupied(true);
-		matrix[3][3].setOccupied(true);
+		matrix[2][0].setOccupied(true);
+		matrix[2][1].setOccupied(true);
+		matrix[2][2].setOccupied(true);
+		matrix[2][3].setOccupied(true);
 	}
 	
 	public void setLocation(int x, int y){

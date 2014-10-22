@@ -347,8 +347,24 @@ public class GameFrame extends Game{
 		int i;
 		switch(d){
 		case Left:
-			if(currentPiece.getX() <= 0)
-				return true;
+			if(currentPiece.getX() <= 0){
+				for(i = 0; i < col; i++){
+					for(int j = 0; j < row; j++){
+						if(currentPiece.matrix[j][i].isOccupied()){
+							if(currentPiece.getX() + i <= 0)
+								return true;
+							if(currentPiece.getX() + i > 0){
+								if(board[currentPiece.getX() + i - 1][currentPiece.getY() + j].isOccupied())
+									return true;
+							}
+						}
+						
+					}
+				}
+				return false;
+				
+			}
+			
 			for(i = 0; i < col; i++){
 				for(int j = 0; j < row; j++){
 					if(currentPiece.matrix[j][i].isOccupied())
@@ -374,8 +390,22 @@ public class GameFrame extends Game{
 			}
 			return false;
 		case Right:
-			if(currentPiece.getX() >= width - currentPiece.getCol())
-				return true;
+			if(currentPiece.getX() >= width - currentPiece.getCol()){
+				for(i = col - 1; i >= 0; i--){
+					for(int j = row - 1; j >= 0; j--){
+						if(currentPiece.matrix[j][i].isOccupied()){
+							if(currentPiece.getX() + i >= width - currentPiece.getCol())
+								return true;
+							if(currentPiece.getX() + i < width - currentPiece.getCol()){
+								if(board[currentPiece.getX() + i - 1][currentPiece.getY() + j].isOccupied())
+									return true;
+							}
+						}
+						
+					}
+				}
+				return false;
+			}
 			for(i = col - 1; i >= 0; i--){
 				for(int j = 0; j < row; j++){
 					if(currentPiece.matrix[j][i].isOccupied())
@@ -394,7 +424,7 @@ public class GameFrame extends Game{
 	public void initializePieces(){
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
-		int x = 3, y = -3;
+		int x = 3, y = -2;
 		String block = "img/I block.png";
 		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
