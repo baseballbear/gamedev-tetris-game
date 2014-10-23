@@ -32,6 +32,7 @@ public class GameFrame extends Game{
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
 	boolean spawn = !false, move = true, shuffle = true, save = false;
+	int handicap;
 	public enum Direction{
 		Left, Down, Right;
 	}
@@ -64,6 +65,13 @@ public class GameFrame extends Game{
 		initializeBoard();
 		initGameState();
 		initializePieces();
+		
+		handicap = 9;
+		for(int i = height - handicap; i < height; i++)
+			for(int j = 0; j < width; j++) {
+				board[j][i].setOccupied(true);
+				board[j][i].setImage(getImage("img/ghost.png"));
+			}
 
 		currentScreen = Screen.MAIN_MENU;
 		menuButtons = new ArrayList<Button>();
@@ -175,7 +183,7 @@ public class GameFrame extends Game{
 	private void checkLine() {
 		boolean lineComplete = true;
 
-		for(int i = 0; i < height; i++) {
+		for(int i = 0; i < height - handicap; i++) {
 			for(int j = 0; j < width; j++) {
 				if(!board[j][i].isOccupied())
 					lineComplete = false;
