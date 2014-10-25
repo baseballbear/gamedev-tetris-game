@@ -104,6 +104,7 @@ public class GameFrame extends Game{
 		currentLvl = 1;
 		linesToClear = currentLvl * 5;
 		score = 0;
+		savedPieces.clear();
 	}
 
 	public void initializeBoard(){
@@ -114,6 +115,7 @@ public class GameFrame extends Game{
 				board[i][j] = new Block(getImage(image), i*size + boardLocX, j*size + boardLocY);
 			}
 		}
+		
 	}
 
 	@Override
@@ -284,6 +286,7 @@ public class GameFrame extends Game{
 						for(int j = 0; j < currentPiece.col; j++)
 							if(currentPiece.matrix[i][j].isOccupied())
 								board[currentPiece.getX() + j][currentPiece.getY() + i] = currentPiece.matrix[i][j];
+					saveCount = 0;
 					spawn = true;
 				}
 				fallTime -= fallDelay;
@@ -355,19 +358,21 @@ public class GameFrame extends Game{
 			//	initResources();
 		}
 		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
-			if(savedPieces.size() < 3){
-				savedPieces.add(currentPiece);
-				spawn = true;
+			if(saveCount < 3){
 				saveCount++;
-			}
-			else{
-				//	if(saveCount < 2){
-				Tetrimino piece = savedPieces.get(0);
-				savedPieces.remove(0);
-				savedPieces.add(currentPiece);
-				piece.setLocation(3, 0);
-				currentPiece = piece;
-				//	}
+				if(savedPieces.size() < 3){
+					savedPieces.add(currentPiece);
+					spawn = true;
+				}
+				else{
+					//	if(saveCount < 2){
+					Tetrimino piece = savedPieces.get(0);
+					savedPieces.remove(0);
+					savedPieces.add(currentPiece);
+					piece.setLocation(3, 0);
+					currentPiece = piece;
+					//	}
+				}
 			}
 
 		}
@@ -379,11 +384,11 @@ public class GameFrame extends Game{
 
 
 		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
-			if(currentPiece.getY() > 0)
+			if(currentPiece.getY() > 0 && !checkRotation(Direction.Left))
 				currentPiece.rotateLeft();
 		}
 		else if(keyPressed('X')) {
-			if(currentPiece.getY() > 0)
+			if(currentPiece.getY() > 0 && !checkRotation(Direction.Right))
 				currentPiece.rotateRight();
 		}
 
@@ -416,15 +421,29 @@ public class GameFrame extends Game{
 		case Left:
 			for(int i = 0; i < row; i++){
 				for(int j = col - 1, k = 0; j >= 0 && k < col; j--, k++){
-					if(currentPiece.getX() >= 0)
-						;
+					if(currentPiece.getMatrix()[i][k].isOccupied()){
+						if(currentPiece.getX() + i >= width || currentPiece.getX() + i < 0)
+							return true;
+						if(currentPiece.getY() + j >= height || board[currentPiece.getX() + i][currentPiece.getY() + j].isOccupied())
+							return true;
+					}
 				}
 			}
 			return false;
 			
 		case Right:
+			for(int i = 0, j = row - 1; i < row && j >= 0; i++, j--){
+				for(int k = 0; k < col; k++){
+					if(currentPiece.getMatrix()[i][k].isOccupied()){
+						if(currentPiece.getX() + j >= width || currentPiece.getX() + j < 0)
+							return true;
+						if(currentPiece.getY() + k >= height || board[currentPiece.getX() + j][currentPiece.getY() + k].isOccupied())
+							return true;
+					}
+				}
+			}
 			
-			return true;
+			return false;
 			
 		default:
 			return false;
