@@ -349,10 +349,12 @@ public class GameFrame extends Game{
 
 
 		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
-			currentPiece.rotateLeft();
+			if(currentPiece.getY() > 0)
+				currentPiece.rotateLeft();
 		}
 		else if(keyPressed('X')) {
-			currentPiece.rotateRight();
+			if(currentPiece.getY() > 0)
+				currentPiece.rotateRight();
 		}
 
 
