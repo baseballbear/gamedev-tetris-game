@@ -242,8 +242,9 @@ public class GameFrame extends Game{
 		if(fallTime >= fallDelay) {
 
 			if(currentPiece.getY() < 0){
-
-				currentPiece.moveDown(speed);
+				while(currentPiece.getY() < 0)
+					currentPiece.moveDown(speed);
+				fallTime -= fallDelay;
 			}
 			else{
 				
