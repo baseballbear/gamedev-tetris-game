@@ -17,12 +17,15 @@ import java.util.Collections;
 import java.util.List;
 
 import com.golden.gamedev.Game;
+import com.golden.gamedev.object.GameFont;
+import com.golden.gamedev.object.font.SystemFont;
 
 public class GameFrame extends Game{
 
 	private int width = 10, height = 20, 
 			size = 25, boardLocX, boardLocY,
-			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0;
+			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0,
+				maxLevel = 15, currentLvl, linesToClear, score;
 	private Block[][] board;
 
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -50,6 +53,8 @@ public class GameFrame extends Game{
 	
 	long fallTime, fallDelay, moveTime, moveDelay = 50;
 
+	GameFont gameFont, scoreFont;
+	
 	//empty constructor
 	public GameFrame(){};
 
@@ -63,6 +68,8 @@ public class GameFrame extends Game{
 		savedPieces = new ArrayList<Tetrimino>();
 		boardLocX = (getWidth() / 2) - (width*size)/2;
 		boardLocY = (getHeight() / 2) - (height*size)/2;
+		gameFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 25), Color.black); // Cooper Std Black
+		scoreFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		initializeBoard();
 		initGameState();
 		initializePieces();
@@ -92,8 +99,11 @@ public class GameFrame extends Game{
 	private void initGameState() {
 		saveCount = 0;
 		fallTime = 0;
-		fallDelay = 900;
+		fallDelay = 900; // 900
 		moveTime = 0;
+		currentLvl = 1;
+		linesToClear = currentLvl * 5;
+		score = 0;
 	}
 
 	public void initializeBoard(){
@@ -131,6 +141,12 @@ public class GameFrame extends Game{
 				}
 				else if(currentPiece != null)
 					currentPiece.render(gd);
+				
+				scoreFont.drawString(gd, score+"", GameFont.CENTER, 70, 360, 120);
+				gameFont.drawString(gd, currentLvl+"", GameFont.CENTER, 70, 450, 120);
+				gameFont.drawString(gd, linesToClear+"", GameFont.CENTER, 70, 530, 120);
+			
+				
 				break;
 			case MAIN_MENU:
 				gd.setColor(Color.black);
@@ -183,13 +199,15 @@ public class GameFrame extends Game{
 	}
 	private void checkLine() {
 		boolean lineComplete = true;
-
+		int lines = 0;
 		for(int i = 0; i < height - handicap; i++) {
 			for(int j = 0; j < width; j++) {
 				if(!board[j][i].isOccupied())
 					lineComplete = false;
 			}
 			if(lineComplete) {
+				lines++;
+				System.out.println("line clear");
 				for(int n = i; n > 0; n--) {
 					for(int m = 0; m < width; m++) {
 						board[m][n].setOccupied(board[m][n - 1].isOccupied());
@@ -197,16 +215,26 @@ public class GameFrame extends Game{
 					}
 				}
 				String image = "img/empty.png";
-
+				
 				for(int m = 0; m < width; m++) {
 					board[m][0].setOccupied(false);
 					board[m][0].setImage(getImage(image));
 				}
 			}
 			lineComplete = true;
-
 		}
-
+		if(lines > 0) {
+			System.out.println(lines);
+			linesToClear -= lines;
+			if(linesToClear <= 0) {
+				currentLvl++;
+				if(currentLvl == 15) {
+					// TODO: Game over
+				}
+				linesToClear = currentLvl * 5;
+			}
+			score += lines * 200 + currentLvl * 50;
+		}
 	}
 
 	public void setUpNextPieces(String listName){
@@ -313,8 +341,10 @@ public class GameFrame extends Game{
 		
 		if(keyDown(KeyEvent.VK_DOWN)) {
 			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Down))
+				if(!checkCollision(Direction.Down)) {
 					currentPiece.moveDown(speed);
+					score++;
+				}
 			}
 		}
 		
@@ -445,10 +475,12 @@ public class GameFrame extends Game{
 			}
 			for(int j = 0; j < col; j++){
 				for(i = row - 2; i <= row - 1; i++)
-					if(currentPiece.matrix[i][j].isOccupied())
+					if(currentPiece.matrix[i][j].isOccupied()) {
+						System.out.println("i = " + i + " j = " + j);
 						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied()){
 							return true;
 						}
+					}
 			}
 			return false;
 		case Right:
