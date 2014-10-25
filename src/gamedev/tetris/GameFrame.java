@@ -48,7 +48,7 @@ public class GameFrame extends Game{
 	List<Button> menuButtons,
 	pauseButtons;
 	
-	long fallTime, fallDelay;
+	long fallTime, fallDelay, moveTime, moveDelay = 50;
 
 	//empty constructor
 	public GameFrame(){};
@@ -82,9 +82,9 @@ public class GameFrame extends Game{
 		menuButtons.add(new Button(getImage("img/buttons/settings.png"), 0, 210, "Settings"));
 
 		pauseButtons = new ArrayList<Button>();
-		pauseButtons.add(new Button(getImage("img/buttons/temp.png"), 0, 0, "Resume"));
-		pauseButtons.add(new Button(getImage("img/buttons/temp.png"), 0, 70, "Restart"));
-		pauseButtons.add(new Button(getImage("img/buttons/temp.png"), 0, 140, "ExitToMainMenu"));
+		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), 0, 0, "Resume"));
+		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), 0, 70, "Restart"));
+		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), 0, 140, "ExitToMainMenu"));
 		
 		
 	}
@@ -93,7 +93,7 @@ public class GameFrame extends Game{
 		saveCount = 0;
 		fallTime = 0;
 		fallDelay = 900;
-
+		moveTime = 0;
 	}
 
 	public void initializeBoard(){
@@ -166,7 +166,7 @@ public class GameFrame extends Game{
 				else{
 					spawn(time);
 				}
-				getInput();
+				getInput(time);
 		
 				break;
 			case MAIN_MENU:
@@ -287,34 +287,43 @@ public class GameFrame extends Game{
 		gd.drawString("Game Over", getWidth()/2 - 150, getHeight()/2);
 	}
 
-	private void getInput() {
-		if(keyPressed(KeyEvent.VK_LEFT)) {
-			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Left)){
-					currentPiece.moveLeft(boardLocX);
+	private void getInput(long time) {
+		if(keyDown(KeyEvent.VK_LEFT)) {
+			if(moveTime >= moveDelay) {
+				if(currentPiece.getY() >= 0){
+					if(!checkCollision(Direction.Left)){
+						currentPiece.moveLeft(boardLocX);
+					}
 				}
+				moveTime = 0;
 			}
-			
+			moveTime += time;
 		}
-		else if(keyPressed(KeyEvent.VK_RIGHT)) {
-
-			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Right))
-					currentPiece.moveRight(boardLocX);
+		else if(keyDown(KeyEvent.VK_RIGHT)) {
+			if(moveTime >= moveDelay) {
+				if(currentPiece.getY() >= 0){
+					if(!checkCollision(Direction.Right))
+						currentPiece.moveRight(boardLocX);
+				}
+				moveTime = 0;
 			}
+			moveTime += time;
 		}
-		else if(keyDown(KeyEvent.VK_DOWN)) {
+		
+		if(keyDown(KeyEvent.VK_DOWN)) {
 			if(currentPiece.getY() >= 0){
 				if(!checkCollision(Direction.Down))
 					currentPiece.moveDown(speed);
 			}
 		}
-		else if(keyPressed(KeyEvent.VK_SPACE)) {
+		
+		if(keyPressed(KeyEvent.VK_SPACE)) {
 			//currentPiece.quickDrop();
 			//spawn = true;
 		}else if(keyPressed(KeyEvent.VK_R)) {
 			//	initResources();
-		}else if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
+		}
+		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
 			if(savedPieces.size() < 3){
 				savedPieces.add(currentPiece);
 				spawn = true;
@@ -330,7 +339,9 @@ public class GameFrame extends Game{
 				//	}
 			}
 
-		} else if(keyPressed(KeyEvent.VK_ESCAPE)) {
+		}
+		
+		if(keyPressed(KeyEvent.VK_ESCAPE)) {
 			currentScreen = Screen.PAUSE_SCREEN;
 			fallTime = 0;
 		}
