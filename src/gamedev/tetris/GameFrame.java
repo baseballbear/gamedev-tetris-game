@@ -36,6 +36,7 @@ public class GameFrame extends Game{
 	public enum Direction{
 		Left, Down, Right;
 	}
+	
 
 	public enum Screen {
 		GAME_SCREEN,
@@ -47,7 +48,7 @@ public class GameFrame extends Game{
 	List<Button> menuButtons,
 	pauseButtons;
 	
-	long fallTime, fallDelay = 500;
+	long fallTime, fallDelay;
 
 	//empty constructor
 	public GameFrame(){};
@@ -66,7 +67,7 @@ public class GameFrame extends Game{
 		initGameState();
 		initializePieces();
 		
-		handicap = 9;
+		handicap = 0;
 		for(int i = height - handicap; i < height; i++)
 			for(int j = 0; j < width; j++) {
 				board[j][i].setOccupied(true);
@@ -239,7 +240,7 @@ public class GameFrame extends Game{
 
 		}
 		if(fallTime >= fallDelay) {
-			if(!checkCollision(GameFrame.Direction.Down)){
+			if(!checkCollision(GameFrame.Direction.Down )){
 				currentPiece.moveDown(speed);
 			}
 			else{
@@ -286,15 +287,18 @@ public class GameFrame extends Game{
 			}
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
-			if(!checkCollision(Direction.Right))
+			if(!checkCollision(Direction.Right)){
 				currentPiece.moveRight(boardLocX);
+			}
 		}
 		else if(keyPressed(KeyEvent.VK_UP)) {
 
 		}
 		else if(keyDown(KeyEvent.VK_DOWN)) {
-			if(!checkCollision(Direction.Down))
+			if(!checkCollision(Direction.Down)){
 				currentPiece.moveDown(speed);
+				fallTime = 0;
+			}
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
 			//currentPiece.quickDrop();
@@ -319,6 +323,7 @@ public class GameFrame extends Game{
 
 		} else if(keyPressed(KeyEvent.VK_ESCAPE)) {
 			currentScreen = Screen.PAUSE_SCREEN;
+			fallTime = 0;
 		}
 
 
@@ -327,7 +332,6 @@ public class GameFrame extends Game{
 		}
 		else if(keyPressed('X')) {
 			currentPiece.rotateRight();
-
 		}
 
 	}
@@ -347,6 +351,31 @@ public class GameFrame extends Game{
 			locy = boardLocY + 10 + i * 60;
 			gd.drawImage(getImage("img/smallpieces/" + savedPieces.get(i).getImageName() + ".png"), locx, locy, null);
 		}
+	}
+	
+	public boolean checkRotation(Direction d){
+		int row = currentPiece.matrix.length;
+		int col = currentPiece.matrix[0].length;
+		
+		
+		switch(d){
+		case Left:
+			for(int i = 0; i < row; i++){
+				for(int j = col - 1, k = 0; j >= 0 && k < col; j--, k++){
+					if(currentPiece.getX() >= 0)
+						;
+				}
+			}
+			return false;
+			
+		case Right:
+			
+			return true;
+			
+		default:
+			return false;
+		}
+		
 	}
 
 	public boolean checkCollision(Direction d){
@@ -387,7 +416,6 @@ public class GameFrame extends Game{
 				for(i = 0; i < col; i++)
 					if(currentPiece.matrix[currentPiece.getRow() - 1][i].isOccupied() || currentPiece.getY() + currentPiece.getRow() > height)
 						return true;
-				return false;
 			}
 			for(int j = 0; j < col; j++){
 				for(i = row - 2; i <= row - 1; i++)
@@ -400,9 +428,9 @@ public class GameFrame extends Game{
 		case Right:
 			if(currentPiece.getX() >= width - currentPiece.getCol()){
 				for(i = col - 1; i >= 0; i--){
-					for(int j = row - 1; j >= 0; j--){
+					for(int j = 0; j < row; j++){
 						if(currentPiece.matrix[j][i].isOccupied()){
-							if(currentPiece.getX() + i >= width - currentPiece.getCol())
+							if(currentPiece.getX() + i + 1 >= width)
 								return true;
 							if(currentPiece.getX() + i < width - currentPiece.getCol()){
 								if(board[currentPiece.getX() + i - 1][currentPiece.getY() + j].isOccupied())
