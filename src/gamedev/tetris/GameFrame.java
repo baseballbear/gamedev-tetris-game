@@ -94,6 +94,7 @@ public class GameFrame extends Game{
 		fallTime = 0;
 		fallDelay = 900;
 		moveTime = 0;
+		savedPieces.clear();
 	}
 
 	public void initializeBoard(){
@@ -104,6 +105,7 @@ public class GameFrame extends Game{
 				board[i][j] = new Block(getImage(image), i*size + boardLocX, j*size + boardLocY);
 			}
 		}
+		
 	}
 
 	@Override
