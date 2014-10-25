@@ -349,11 +349,11 @@ public class GameFrame extends Game{
 
 
 		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
-			if(currentPiece.getY() > 0)
+			if(currentPiece.getY() > 0 && !checkRotation(Direction.Left))
 				currentPiece.rotateLeft();
 		}
 		else if(keyPressed('X')) {
-			if(currentPiece.getY() > 0)
+			if(currentPiece.getY() > 0 && !checkRotation(Direction.Right))
 				currentPiece.rotateRight();
 		}
 
@@ -386,15 +386,29 @@ public class GameFrame extends Game{
 		case Left:
 			for(int i = 0; i < row; i++){
 				for(int j = col - 1, k = 0; j >= 0 && k < col; j--, k++){
-					if(currentPiece.getX() >= 0)
-						;
+					if(currentPiece.getMatrix()[i][k].isOccupied()){
+						if(currentPiece.getX() + i >= width || currentPiece.getX() + i < 0)
+							return true;
+						if(currentPiece.getY() + j >= height || board[currentPiece.getX() + i][currentPiece.getY() + j].isOccupied())
+							return true;
+					}
 				}
 			}
 			return false;
 			
 		case Right:
+			for(int i = 0, j = row - 1; i < row && j >= 0; i++, j--){
+				for(int k = 0; k < col; k++){
+					if(currentPiece.getMatrix()[i][k].isOccupied()){
+						if(currentPiece.getX() + j >= width || currentPiece.getX() + j < 0)
+							return true;
+						if(currentPiece.getY() + k >= height || board[currentPiece.getX() + j][currentPiece.getY() + k].isOccupied())
+							return true;
+					}
+				}
+			}
 			
-			return true;
+			return false;
 			
 		default:
 			return false;
