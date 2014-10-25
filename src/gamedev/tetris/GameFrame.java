@@ -22,7 +22,7 @@ public class GameFrame extends Game{
 
 	private int width = 10, height = 20, 
 			size = 25, boardLocX, boardLocY,
-			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0;
+			numOfPieces = 6, timer = 0, speed = 1, saveCount;
 	private Block[][] board;
 
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -258,6 +258,7 @@ public class GameFrame extends Game{
 						for(int j = 0; j < currentPiece.col; j++)
 							if(currentPiece.matrix[i][j].isOccupied())
 								board[currentPiece.getX() + j][currentPiece.getY() + i] = currentPiece.matrix[i][j];
+					saveCount = 0;
 					spawn = true;
 				}
 				fallTime -= fallDelay;
@@ -327,19 +328,21 @@ public class GameFrame extends Game{
 			//	initResources();
 		}
 		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
-			if(savedPieces.size() < 3){
-				savedPieces.add(currentPiece);
-				spawn = true;
+			if(saveCount < 3){
 				saveCount++;
-			}
-			else{
-				//	if(saveCount < 2){
-				Tetrimino piece = savedPieces.get(0);
-				savedPieces.remove(0);
-				savedPieces.add(currentPiece);
-				piece.setLocation(3, 0);
-				currentPiece = piece;
-				//	}
+				if(savedPieces.size() < 3){
+					savedPieces.add(currentPiece);
+					spawn = true;
+				}
+				else{
+					//	if(saveCount < 2){
+					Tetrimino piece = savedPieces.get(0);
+					savedPieces.remove(0);
+					savedPieces.add(currentPiece);
+					piece.setLocation(3, 0);
+					currentPiece = piece;
+					//	}
+				}
 			}
 
 		}
