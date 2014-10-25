@@ -240,19 +240,26 @@ public class GameFrame extends Game{
 
 		}
 		if(fallTime >= fallDelay) {
-			if(!checkCollision(GameFrame.Direction.Down )){
+
+			if(currentPiece.getY() < 0){
+
 				currentPiece.moveDown(speed);
 			}
 			else{
-				for(int i = 0; i < currentPiece.row; i++)
-					for(int j = 0; j < currentPiece.col; j++)
-						if(currentPiece.matrix[i][j].isOccupied())
-							board[currentPiece.getX() + j][currentPiece.getY() + i] = currentPiece.matrix[i][j];
-				spawn = true;
+				
+				if(!checkCollision(GameFrame.Direction.Down)){
+					currentPiece.moveDown(speed);
+				}
+				else{
+					for(int i = 0; i < currentPiece.row; i++)
+						for(int j = 0; j < currentPiece.col; j++)
+							if(currentPiece.matrix[i][j].isOccupied())
+								board[currentPiece.getX() + j][currentPiece.getY() + i] = currentPiece.matrix[i][j];
+					spawn = true;
+				}
+				fallTime -= fallDelay;
 			}
-			fallTime -= fallDelay;
 		}
-
 	}
 
 	public boolean isTopOccupied(){
@@ -282,22 +289,24 @@ public class GameFrame extends Game{
 
 	private void getInput() {
 		if(keyPressed(KeyEvent.VK_LEFT)) {
-			if(!checkCollision(Direction.Left)){
-				currentPiece.moveLeft(boardLocX);
+			if(currentPiece.getY() >= 0){
+				if(!checkCollision(Direction.Left)){
+					currentPiece.moveLeft(boardLocX);
+				}
 			}
+			
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
-			if(!checkCollision(Direction.Right)){
-				currentPiece.moveRight(boardLocX);
+
+			if(currentPiece.getY() >= 0){
+				if(!checkCollision(Direction.Right))
+					currentPiece.moveRight(boardLocX);
 			}
 		}
-		else if(keyPressed(KeyEvent.VK_UP)) {
-
-		}
 		else if(keyDown(KeyEvent.VK_DOWN)) {
-			if(!checkCollision(Direction.Down)){
-				currentPiece.moveDown(speed);
-				fallTime = 0;
+			if(currentPiece.getY() >= 0){
+				if(!checkCollision(Direction.Down))
+					currentPiece.moveDown(speed);
 			}
 		}
 		else if(keyPressed(KeyEvent.VK_SPACE)) {
@@ -327,12 +336,13 @@ public class GameFrame extends Game{
 		}
 
 
-		if(keyPressed('Z')) {
+		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
 			currentPiece.rotateLeft();
 		}
 		else if(keyPressed('X')) {
 			currentPiece.rotateRight();
 		}
+
 
 	}
 	private void displayNext(Graphics2D gd){
@@ -382,6 +392,8 @@ public class GameFrame extends Game{
 		int row = currentPiece.matrix.length;
 		int col = currentPiece.matrix[0].length;
 		int i;
+		
+		
 		switch(d){
 		case Left:
 			if(currentPiece.getX() <= 0){
@@ -460,12 +472,12 @@ public class GameFrame extends Game{
 	public void initializePieces(){
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
-		int x = 3, y = -2;
+		int x = 3, y = -6;
 		String block = "img/I block.png";
 		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
 
-		x = 3; y = 0;
+		x = 3; y = -4;
 		block = "img/J block.png";
 		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY);
 		availablePieces.add(t);
