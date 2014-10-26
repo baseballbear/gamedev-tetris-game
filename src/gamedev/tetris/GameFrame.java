@@ -80,12 +80,7 @@ public class GameFrame extends Game{
 		initializeButtons();
 		
 		handicapLvl = 0;
-		handicap = handicapLvl * 3;
-		for(int i = height - handicap; i < height; i++)
-			for(int j = 0; j < width; j++) {
-				board[j][i].setOccupied(true);
-				board[j][i].setImage(getImage("img/ghost.png"));
-			}
+		setHandicap();
 
 		currentScreen = Screen.MAIN_MENU;
 		
