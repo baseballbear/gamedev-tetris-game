@@ -133,6 +133,15 @@ public class GameFrame extends Game{
 		}
 		
 	}
+	
+	private void setHandicap() {
+		handicap = handicapLvl * 3;
+		for(int i = height - handicap; i < height; i++)
+			for(int j = 0; j < width; j++) {
+				board[j][i].setOccupied(true);
+				board[j][i].setImage(getImage("img/ghost.png"));
+			}
+	}
 
 	@Override
 	public void render(Graphics2D gd) {
@@ -706,6 +715,7 @@ public class GameFrame extends Game{
 						currentScreen = Screen.MAIN_MENU;
 					}
 				}
+				setHandicap();
 			}
 				
 		}
