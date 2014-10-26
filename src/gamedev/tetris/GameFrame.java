@@ -377,6 +377,8 @@ public class GameFrame extends Game{
 
 		}
 		
+		
+		
 		if(keyPressed(KeyEvent.VK_ESCAPE)) {
 			currentScreen = Screen.PAUSE_SCREEN;
 			fallTime = 0;
