@@ -74,12 +74,13 @@ public class GameFrame extends Game{
 		boardLocX = (getWidth() / 2) - (width*size)/2;
 		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2;
 		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), Color.black); // Cooper Std Black
-		scoreFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 23), Color.black); // Cooper Std Black
+		scoreFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		initializeBoard();
 		initGameState();
 		initializePieces();
 		initializeButtons();
 		
+		extreme = false;
 		handicapLvl = 0;
 		setHandicap();
 
@@ -106,11 +107,13 @@ public class GameFrame extends Game{
 		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), 0, 210, "handicap3"));
 		settingsButtons.add(new Button(getImage("img/buttons/back.png"), 0, 280, "settings_back"));
 		
+		settingsButtons.add(new Button(getImage("img/buttons/mode.png"), 170, 0, "GameMode"));
+		settingsButtons.add(new Button(getImage("img/buttons/classic2_pressed.png"), 170, 70, "Classic"));
+		settingsButtons.add(new Button(getImage("img/buttons/extreme2.png"), 170, 140, "Extreme"));
 	}
 
 	private void initGameState() {
 		spawn = true;
-		extreme = false;
 		saveCount = 0;
 		fallTime = 0;
 		moveTime = 0;
@@ -151,7 +154,11 @@ public class GameFrame extends Game{
 				gd.fillRect(0, 0, getWidth(), getHeight());
 		
 				gd.setColor(Color.white);
-				gd.drawImage(getImage("img/board.png"), boardLocX - 126, boardLocY - 15, null);
+				
+				String boardImg = "img/board_classic.png";
+				if(extreme)
+					boardImg = "img/board_extreme.png";
+				gd.drawImage(getImage(boardImg), boardLocX - 126, boardLocY - 15, null);
 		
 				for (int i = 0; i < width; i++) {
 					for (int j = 0; j < height; j++) {
@@ -425,22 +432,24 @@ public class GameFrame extends Game{
 			//	initResources();
 		}
 		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
-			if(saveCount < 3){
-				saveCount++;
-				if(savedPieces.size() < 3){
-					currentPiece.setLocation(3, 0);
-					savedPieces.add(currentPiece);
-					spawn = true;
-			}
-				else{
-				//	if(saveCount < 2){
-					Tetrimino piece = savedPieces.get(0);
-					savedPieces.remove(0);
-					savedPieces.add(currentPiece);
-					piece.setLocation(3, 0);
-					currentPiece = piece;
-					setGhostPiece();
-				//	}
+			if(extreme) {
+				if(saveCount < 3){
+					saveCount++;
+					if(savedPieces.size() < 3){
+						currentPiece.setLocation(3, 0);
+						savedPieces.add(currentPiece);
+						spawn = true;
+				}
+					else{
+					//	if(saveCount < 2){
+						Tetrimino piece = savedPieces.get(0);
+						savedPieces.remove(0);
+						savedPieces.add(currentPiece);
+						piece.setLocation(3, 0);
+						currentPiece = piece;
+						setGhostPiece();
+					//	}
+					}
 				}
 			}
 		}
@@ -813,6 +822,17 @@ public class GameFrame extends Game{
 					}
 					else if(b.getBtnName().equals("settings_back")) {
 						currentScreen = Screen.MAIN_MENU;
+					}
+					
+					if(b.getBtnName().equals("Classic")) {
+						extreme = false;
+						b.setImage(getImage("img/buttons/classic2_pressed.png"));
+						settingsButtons.get(7).setImage(getImage("img/buttons/extreme2.png"));
+					}
+					else if(b.getBtnName().equals("Extreme")) {
+						extreme = true;
+						b.setImage(getImage("img/buttons/extreme2_pressed.png"));
+						settingsButtons.get(6).setImage(getImage("img/buttons/classic2.png"));
 					}
 				}
 				setHandicap();
