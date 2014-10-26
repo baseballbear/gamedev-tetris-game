@@ -13,6 +13,7 @@ public abstract class Tetrimino {
 	protected int row, col;
 	protected String imageName;
 	protected int boardX, boardY;
+	protected int chance = 100;
 	
 	
 	public Tetrimino(int x, int y){
@@ -164,5 +165,15 @@ public abstract class Tetrimino {
 			}
 		}
 	}
+
+	public int getChance() {
+		return chance;
+	}
+
+	public void setChance(int chance) {
+		this.chance = chance;
+	}
+	
+	
 	
 }

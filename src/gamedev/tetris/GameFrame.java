@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.golden.gamedev.Game;
 import com.golden.gamedev.object.GameFont;
@@ -36,7 +37,7 @@ public class GameFrame extends Game{
 	dropPieces,
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece, ghostPiece; // current piece falling 
-	boolean spawn = true;
+	boolean spawn, extreme;
 	int handicap, handicapLvl;
 	public enum Direction{
 		Left, Down, Right;
@@ -108,6 +109,8 @@ public class GameFrame extends Game{
 	}
 
 	private void initGameState() {
+		spawn = true;
+		extreme = false;
 		saveCount = 0;
 		fallTime = 0;
 		fallDelay = 900; // 900
@@ -638,46 +641,92 @@ public class GameFrame extends Game{
 
 	// put every type of tetriminos in availablepieces List
 	private void initializePieces(){
+		Random rand = new Random();
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
 		int x = 3, y = 1;
 		String block = "img/I block.png";
 		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-
+		
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
+		
+		block = "img/rectangle block.png";
+		t = new RectanglePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
+			availablePieces.add(t);
+		}
+		
+		block = "img/hook block.png";
+		t = new HookPiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
+			availablePieces.add(t);
+		}
+		
 		block = "img/J block.png";
 		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-
+		
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
+		
 		block = "img/L block.png";
 		t = new LPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
+		
 		block = "img/T block.png";
 		t = new TPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
+		
 		y = 0;
 
 		block = "img/S block.png";
 		t = new SPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
+		
 		block = "img/Z block.png";
 		t = new ZPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);	
-
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
+		
 		block = "img/square Block.png";
 		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-		
-		block = "img/rectangle block.png";
-		t = new RectanglePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
-		
-		block = "img/hook block.png";
-		t = new HookPiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
-		availablePieces.add(t);
+		if(!extreme){
+			availablePieces.add(t);
+		}
+		else if(rand.nextInt(100) + 1 <= t.getChance()){
+			availablePieces.add(t);
+		}
 		
 
 	}
