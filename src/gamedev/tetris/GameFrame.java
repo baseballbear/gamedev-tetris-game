@@ -28,7 +28,7 @@ public class GameFrame extends Game{
 	private int width = 10, height = 23, 
 			size = 25, boardLocX, boardLocY,
 			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0,
-				maxLevel = 15, currentLvl, linesToClear, score;
+				maxLevel = 15, currentLvl, linesToClear, score, quickDropScore = 0;
 	private Block[][] board;
 
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -427,7 +427,8 @@ public class GameFrame extends Game{
 		
 		if(keyPressed(KeyEvent.VK_SPACE)) {
 			currentPiece.setLocation(ghostPiece.getX(), ghostPiece.getY());
-			
+			score += quickDropScore;
+			fallTime = 999;
 		}else if(keyPressed(KeyEvent.VK_R)) {
 			//	initResources();
 		}
@@ -646,8 +647,11 @@ public class GameFrame extends Game{
 	
 	public void moveGhostPiece(){
 		ghostPiece.setLocation(currentPiece.getX(), currentPiece.getY());
-		while(!checkCollision(Direction.Down, ghostPiece))
+		quickDropScore = 0;
+		while(!checkCollision(Direction.Down, ghostPiece)) {
 			ghostPiece.moveDown(speed);
+			quickDropScore++;
+		}
 	}
 
 	// put every type of tetriminos in availablepieces List
