@@ -489,7 +489,7 @@ public class GameFrame extends Game{
 						return true;
 			}
 			for(int j = 0; j < col; j++){
-				for(i = row - 2; i <= row - 1; i++)
+				for(i = 0; i < row; i++)
 					if(currentPiece.matrix[i][j].isOccupied()) {
 						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied()){
 							return true;
