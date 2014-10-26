@@ -28,7 +28,7 @@ public class GameFrame extends Game{
 	private int width = 10, height = 23, 
 			size = 25, boardLocX, boardLocY,
 			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0,
-				maxLevel = 15, currentLvl, linesToClear, score;
+				maxLevel = 15, currentLvl, linesToClear, score, quickDropScore = 0;
 	private Block[][] board;
 
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -49,16 +49,20 @@ public class GameFrame extends Game{
 		MAIN_MENU,
 		GAME_OVER,
 		PAUSE_SCREEN,
-		SETTINGS_SCREEN
+		SETTINGS_SCREEN, 
+		CHANCE_SCREEN
 	}
 	Screen currentScreen;
 	List<Button> menuButtons,
 			pauseButtons,
-				settingsButtons;
+			settingsButtons,
+			chanceButtons;
 	
 	long fallTime, fallDelay, moveTime, moveDelay = 90;
 
 	GameFont gameFont, scoreFont;
+	
+	String quickDropSound = "sfx/8.wav";
 	
 	//empty constructor
 	public GameFrame(){};
@@ -74,12 +78,13 @@ public class GameFrame extends Game{
 		boardLocX = (getWidth() / 2) - (width*size)/2;
 		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2;
 		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), Color.black); // Cooper Std Black
-		scoreFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 23), Color.black); // Cooper Std Black
+		scoreFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		initializeBoard();
 		initGameState();
 		initializePieces();
 		initializeButtons();
 		
+		extreme = false;
 		handicapLvl = 0;
 		setHandicap();
 
@@ -88,37 +93,45 @@ public class GameFrame extends Game{
 	}
 	
 	private void initializeButtons() {
+		int offset = 200, center = getWidth()/2 - 75;
 		menuButtons = new ArrayList<Button>();
-		menuButtons.add(new Button(getImage("img/buttons/play.png"), 0, 0, "Start"));
-		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), 0, 70, "Highscores"));
-		menuButtons.add(new Button(getImage("img/buttons/help2.png"), 0, 140, "Help"));
-		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), 0, 210, "Settings"));
+		menuButtons.add(new Button(getImage("img/buttons/play.png"), center, 0 + offset, "Start"));
+		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), center, 70 + offset, "Highscores"));
+		menuButtons.add(new Button(getImage("img/buttons/help2.png"), center, 140 + offset, "Chance"));
+		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), center, 210 + offset, "Settings"));
 
 		pauseButtons = new ArrayList<Button>();
-		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), 0, 0, "Resume"));
-		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), 0, 70, "Restart"));
-		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), 0, 140, "ExitToMainMenu"));
+		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), center, 0 + offset, "Resume"));
+		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), center, 70 + offset, "Restart"));
+		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), center, 140 + offset, "ExitToMainMenu"));
 		
+		int middleLeft = getWidth() / 4 - 75, middleRight = getWidth() * 3 / 4 - 75;
 		settingsButtons = new ArrayList<Button>();
-		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), 0, 0, "handicaplabel"));
-		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), 0, 70, "handicap1"));
-		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), 0, 140, "handicap2"));
-		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), 0, 210, "handicap3"));
-		settingsButtons.add(new Button(getImage("img/buttons/back.png"), 0, 280, "settings_back"));
+		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), middleLeft, 0 + offset, "handicaplabel"));
+		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), middleLeft, 70 + offset, "handicap1"));
+		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), middleLeft, 140 + offset, "handicap2"));
+		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), middleLeft, 210 + offset, "handicap3"));
+		settingsButtons.add(new Button(getImage("img/buttons/back.png"), middleLeft, 320 + offset, "settings_back"));
 		
+		settingsButtons.add(new Button(getImage("img/buttons/mode.png"), middleRight, 0 + offset, "GameMode"));
+		settingsButtons.add(new Button(getImage("img/buttons/classic2_pressed.png"), middleRight, 70 + offset, "Classic"));
+		settingsButtons.add(new Button(getImage("img/buttons/extreme2.png"), middleRight, 140 + offset, "Extreme"));
+		
+		chanceButtons = new ArrayList<Button>();
 	}
 
 	private void initGameState() {
 		spawn = true;
-		extreme = false;
 		saveCount = 0;
 		fallTime = 0;
-		fallDelay = 900; // 900
 		moveTime = 0;
 		currentLvl = 1;
 		linesToClear = currentLvl * 5;
 		score = 0;
 		savedPieces.clear();
+
+		fallDelay = 960 - 60*currentLvl;
+
 	}
 
 	private void initializeBoard(){
@@ -149,7 +162,11 @@ public class GameFrame extends Game{
 				gd.fillRect(0, 0, getWidth(), getHeight());
 		
 				gd.setColor(Color.white);
-				gd.drawImage(getImage("img/board.png"), boardLocX - 126, boardLocY - 15, null);
+				
+				String boardImg = "img/board_classic.png";
+				if(extreme)
+					boardImg = "img/board_extreme.png";
+				gd.drawImage(getImage(boardImg), boardLocX - 126, boardLocY - 15, null);
 		
 				for (int i = 0; i < width; i++) {
 					for (int j = 0; j < height; j++) {
@@ -200,7 +217,9 @@ public class GameFrame extends Game{
 				for(Button b : settingsButtons)
 					b.render(gd);
 				break;
-			
+			case CHANCE_SCREEN:
+				
+				break;
 			default:
 				break;
 		}
@@ -417,28 +436,32 @@ public class GameFrame extends Game{
 		}
 		
 		if(keyPressed(KeyEvent.VK_SPACE)) {
-			//currentPiece.quickDrop();
-			//spawn = true;
+			playSound(quickDropSound);
+			currentPiece.setLocation(ghostPiece.getX(), ghostPiece.getY());
+			score += quickDropScore;
+			fallTime = 999;
 		}else if(keyPressed(KeyEvent.VK_R)) {
 			//	initResources();
 		}
 		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
-			if(saveCount < 3){
-				saveCount++;
-				if(savedPieces.size() < 3){
-					currentPiece.setLocation(3, 0);
-					savedPieces.add(currentPiece);
-					spawn = true;
-			}
-				else{
-				//	if(saveCount < 2){
-					Tetrimino piece = savedPieces.get(0);
-					savedPieces.remove(0);
-					savedPieces.add(currentPiece);
-					piece.setLocation(3, 0);
-					currentPiece = piece;
-					setGhostPiece();
-				//	}
+			if(extreme) {
+				if(saveCount < 3){
+					saveCount++;
+					if(savedPieces.size() < 3){
+						currentPiece.setLocation(3, 0);
+						savedPieces.add(currentPiece);
+						spawn = true;
+				}
+					else{
+					//	if(saveCount < 2){
+						Tetrimino piece = savedPieces.get(0);
+						savedPieces.remove(0);
+						savedPieces.add(currentPiece);
+						piece.setLocation(3, 0);
+						currentPiece = piece;
+						setGhostPiece();
+					//	}
+					}
 				}
 			}
 		}
@@ -635,8 +658,11 @@ public class GameFrame extends Game{
 	
 	public void moveGhostPiece(){
 		ghostPiece.setLocation(currentPiece.getX(), currentPiece.getY());
-		while(!checkCollision(Direction.Down, ghostPiece))
+		quickDropScore = 0;
+		while(!checkCollision(Direction.Down, ghostPiece)) {
 			ghostPiece.moveDown(speed);
+			quickDropScore++;
+		}
 	}
 
 	// put every type of tetriminos in availablepieces List
@@ -760,6 +786,8 @@ public class GameFrame extends Game{
 					}
 					else if(b.getBtnName().equals("Settings")) {
 						currentScreen = Screen.SETTINGS_SCREEN;
+					} else if(b.getBtnName().equals("Chance")) {
+						currentScreen = Screen.CHANCE_SCREEN;
 					}
 				}
 		}
@@ -811,6 +839,17 @@ public class GameFrame extends Game{
 					}
 					else if(b.getBtnName().equals("settings_back")) {
 						currentScreen = Screen.MAIN_MENU;
+					}
+					
+					if(b.getBtnName().equals("Classic")) {
+						extreme = false;
+						b.setImage(getImage("img/buttons/classic2_pressed.png"));
+						settingsButtons.get(7).setImage(getImage("img/buttons/extreme2.png"));
+					}
+					else if(b.getBtnName().equals("Extreme")) {
+						extreme = true;
+						b.setImage(getImage("img/buttons/extreme2_pressed.png"));
+						settingsButtons.get(6).setImage(getImage("img/buttons/classic2.png"));
 					}
 				}
 				setHandicap();

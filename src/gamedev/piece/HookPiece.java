@@ -13,7 +13,7 @@ public class HookPiece extends Tetrimino{
 		this.boardX = boardX;
 		this.boardY = boardY;
 		initializeMatrix(image);
-		super.imageName = "small_i3";
+		super.imageName = "unknown_block";
 	
 		matrix[0][1].setOccupied(true);
 		matrix[0][2].setOccupied(true);
