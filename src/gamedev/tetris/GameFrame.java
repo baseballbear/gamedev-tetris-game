@@ -12,11 +12,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.golden.gamedev.Game;
+import com.golden.gamedev.engine.BaseInput;
+import com.golden.gamedev.engine.input.AWTInput;
 import com.golden.gamedev.object.GameFont;
 import com.golden.gamedev.object.font.SystemFont;
 
@@ -29,27 +32,30 @@ public class GameFrame extends Game{
 	private Block[][] board;
 
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
-	nextPieces,  // the pieces that are next on the list
-	nextPieces2,
-	dropPieces,
-	availablePieces; // all the types of tetriminos
+		nextPieces,  // the pieces that are next on the list
+		nextPieces2,
+		dropPieces,
+		availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
 	boolean spawn = true;
-	int handicap;
+	int handicap, handicapLvl;
 	public enum Direction{
 		Left, Down, Right;
 	}
 	
-
+	BaseInput input;
+	
 	public enum Screen {
 		GAME_SCREEN,
 		MAIN_MENU,
 		GAME_OVER,
-		PAUSE_SCREEN
+		PAUSE_SCREEN,
+		SETTINGS_SCREEN
 	}
 	Screen currentScreen;
 	List<Button> menuButtons,
-	pauseButtons;
+			pauseButtons,
+				settingsButtons;
 	
 	long fallTime, fallDelay, moveTime, moveDelay = 90;
 
@@ -68,13 +74,15 @@ public class GameFrame extends Game{
 		savedPieces = new ArrayList<Tetrimino>();
 		boardLocX = (getWidth() / 2) - (width*size)/2;
 		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2;
-		gameFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 25), Color.black); // Cooper Std Black
+		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), Color.black); // Cooper Std Black
 		scoreFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		initializeBoard();
 		initGameState();
 		initializePieces();
+		initializeButtons();
 		
-		handicap = 0;
+		handicapLvl = 0;
+		handicap = handicapLvl * 3;
 		for(int i = height - handicap; i < height; i++)
 			for(int j = 0; j < width; j++) {
 				board[j][i].setOccupied(true);
@@ -82,17 +90,29 @@ public class GameFrame extends Game{
 			}
 
 		currentScreen = Screen.MAIN_MENU;
+		
+		input = new InputListener();
+		input.refresh();
+	}
+	
+	private void initializeButtons() {
 		menuButtons = new ArrayList<Button>();
-		menuButtons.add(new Button(getImage("img/buttons/play2.png"), 0, 0, "Start"));
-		menuButtons.add(new Button(getImage("img/buttons/highscores.png"), 0, 70, "Highscores"));
-		menuButtons.add(new Button(getImage("img/buttons/help.png"), 0, 140, "Help"));
-		menuButtons.add(new Button(getImage("img/buttons/settings.png"), 0, 210, "Settings"));
+		menuButtons.add(new Button(getImage("img/buttons/play.png"), 0, 0, "Start"));
+		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), 0, 70, "Highscores"));
+		menuButtons.add(new Button(getImage("img/buttons/help2.png"), 0, 140, "Help"));
+		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), 0, 210, "Settings"));
 
 		pauseButtons = new ArrayList<Button>();
 		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), 0, 0, "Resume"));
 		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), 0, 70, "Restart"));
 		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), 0, 140, "ExitToMainMenu"));
 		
+		settingsButtons = new ArrayList<Button>();
+		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), 0, 0, "handicaplabel"));
+		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), 0, 70, "handicap1"));
+		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), 0, 140, "handicap2"));
+		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), 0, 210, "handicap3"));
+		settingsButtons.add(new Button(getImage("img/buttons/back.png"), 0, 280, "settings_back"));
 		
 	}
 
@@ -107,7 +127,7 @@ public class GameFrame extends Game{
 		savedPieces.clear();
 	}
 
-	public void initializeBoard(){
+	private void initializeBoard(){
 		String image = "img/empty.png";
 
 		for(int i = 0; i < width; i++){
@@ -166,6 +186,14 @@ public class GameFrame extends Game{
 				for(Button b : pauseButtons)
 					b.render(gd);
 				break;
+			case SETTINGS_SCREEN:
+				gd.setColor(Color.black);
+				gd.fillRect(0, 0, getWidth(), getHeight());
+				
+				for(Button b : settingsButtons)
+					b.render(gd);
+				break;
+			
 			default:
 				break;
 		}
@@ -188,15 +216,20 @@ public class GameFrame extends Game{
 					spawn(time);
 				}
 				getInput(time);
-		
 				break;
 			case MAIN_MENU:
+				input.update(time);
+				input.isMouseDown(input.getMouseReleased());
+//				input.isKeyPressed('A');
 				getMainMenuInput();
 				break;
 			case GAME_OVER:
 				break;
 			case PAUSE_SCREEN:
 				getPauseMenuInput();
+				break;
+			case SETTINGS_SCREEN:
+				getSettingScreenInput();
 				break;
 			default:
 				break;
@@ -549,7 +582,7 @@ public class GameFrame extends Game{
 	}
 
 	// put every type of tetriminos in availablepieces List
-	public void initializePieces(){
+	private void initializePieces(){
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
 		int x = 3, y = 1;
@@ -608,11 +641,198 @@ public class GameFrame extends Game{
 		if(click()) {
 			int x = getMouseX(), y = getMouseY();
 			for(Button b : menuButtons)
-				if(b.contains(x, y))
+				if(b.contains(x, y)) {
 					if(b.getBtnName().equals("Start")) {
 						currentScreen = Screen.GAME_SCREEN;
 					}
+					else if(b.getBtnName().equals("Settings")) {
+						currentScreen = Screen.SETTINGS_SCREEN;
+					}
+				}
 		}
+	}
+	
+	private void getSettingScreenInput() {
+		if(click()) {
+			int x = getMouseX(), y = getMouseY();
+			for(Button b : settingsButtons) {
+				if(b.contains(x, y)) {
+					if(b.getBtnName().equals("handicap1")) {
+						if(handicapLvl == 1) {
+							handicapLvl = 0;
+							b.setImage(getImage("img/buttons/one2.png"));
+						}
+						else {
+							handicapLvl = 1;
+							settingsButtons.get(2).setImage(getImage("img/buttons/two2.png"));
+							settingsButtons.get(3).setImage(getImage("img/buttons/three2.png"));
+							
+							b.setImage(getImage("img/buttons/one2_pressed.png"));
+						}
+					}
+					else if(b.getBtnName().equals("handicap2")) {
+						if(handicapLvl == 2) {
+							handicapLvl = 0;
+							b.setImage(getImage("img/buttons/two2.png"));
+						}
+						else {
+							handicapLvl = 2;
+							settingsButtons.get(1).setImage(getImage("img/buttons/one2.png"));
+							settingsButtons.get(3).setImage(getImage("img/buttons/three2.png"));
+							
+							b.setImage(getImage("img/buttons/two2_pressed.png"));
+						}
+					}
+					else if(b.getBtnName().equals("handicap3")) {
+						if(handicapLvl == 3) {
+							handicapLvl = 0;
+							b.setImage(getImage("img/buttons/three2.png"));
+						}
+						else {
+							handicapLvl = 3;
+							settingsButtons.get(1).setImage(getImage("img/buttons/one2.png"));
+							settingsButtons.get(2).setImage(getImage("img/buttons/two2.png"));
+							
+							b.setImage(getImage("img/buttons/three2_pressed.png"));
+						}
+					}
+					else if(b.getBtnName().equals("settings_back")) {
+						currentScreen = Screen.MAIN_MENU;
+					}
+				}
+			}
+				
+		}
+	}
+	
+	private class InputListener implements BaseInput {
+
+		@Override
+		public void cleanup() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public int getKeyPressed() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getKeyReleased() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMouseDX() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMouseDY() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMousePressed() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMouseReleased() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMouseX() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMouseY() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public boolean isKeyDown(int arg0) {
+			
+			return false;
+		}
+
+		@Override
+		public boolean isKeyPressed(int i) {
+			System.out.println(i);
+			return false;
+		}
+
+		@Override
+		public boolean isKeyReleased(int arg0) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isMouseDown(int i) {
+			
+			return true;
+		}
+
+		@Override
+		public boolean isMouseExists() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isMousePressed(int i) {
+			return false;
+		}
+
+		@Override
+		public boolean isMouseReleased(int i) {
+			if(i == MouseEvent.BUTTON1)
+				System.out.println("mouse button 1 released");
+			return false;
+		}
+
+		@Override
+		public boolean isMouseVisible() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void mouseMove(int arg0, int arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void refresh() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void setMouseVisible(boolean arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void update(long arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 }
