@@ -134,7 +134,7 @@ public class GameFrame extends Game{
 		for(int i = height - handicap; i < height; i++)
 			for(int j = 0; j < width; j++) {
 				board[j][i].setOccupied(true);
-				board[j][i].setImage(getImage("img/ghost.png"));
+				board[j][i].setImage(getImage("img/occupied_block.png"));
 			}
 	}
 
