@@ -60,6 +60,8 @@ public class GameFrame extends Game{
 
 	GameFont gameFont, scoreFont;
 	
+	String quickDropSound = "sfx/5.wav";
+	
 	//empty constructor
 	public GameFrame(){};
 
@@ -426,6 +428,7 @@ public class GameFrame extends Game{
 		}
 		
 		if(keyPressed(KeyEvent.VK_SPACE)) {
+			playSound(quickDropSound);
 			currentPiece.setLocation(ghostPiece.getX(), ghostPiece.getY());
 			score += quickDropScore;
 			fallTime = 999;
