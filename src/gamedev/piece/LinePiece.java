@@ -1,6 +1,5 @@
 package gamedev.piece;
 
-import gamedev.tetris.Block;
 import gamedev.tetris.Tetrimino;
 
 import java.awt.image.BufferedImage;

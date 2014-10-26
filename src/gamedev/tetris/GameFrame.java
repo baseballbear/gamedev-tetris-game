@@ -1,8 +1,10 @@
 package gamedev.tetris;
 
+import gamedev.piece.HookPiece;
 import gamedev.piece.JPiece;
 import gamedev.piece.LPiece;
 import gamedev.piece.LinePiece;
+import gamedev.piece.RectanglePiece;
 import gamedev.piece.SPiece;
 import gamedev.piece.SquarePiece;
 import gamedev.piece.TPiece;
@@ -586,6 +588,15 @@ public class GameFrame extends Game{
 		block = "img/square Block.png";
 		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
+		
+		block = "img/rectangle block.png";
+		t = new RectanglePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		availablePieces.add(t);
+		
+		block = "img/hook block.png";
+		t = new HookPiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		availablePieces.add(t);
+		
 
 	}
 
