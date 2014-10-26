@@ -60,7 +60,7 @@ public class GameFrame extends Game{
 
 	GameFont gameFont, scoreFont;
 	
-	String quickDropSound = "sfx/4.wav";
+	String quickDropSound = "sfx/8.wav";
 	
 	//empty constructor
 	public GameFrame(){};
