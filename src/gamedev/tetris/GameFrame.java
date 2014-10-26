@@ -35,7 +35,7 @@ public class GameFrame extends Game{
 	nextPieces2,
 	dropPieces,
 	availablePieces; // all the types of tetriminos
-	Tetrimino currentPiece; // current piece falling 
+	Tetrimino currentPiece, ghostPiece; // current piece falling 
 	boolean spawn = true;
 	int handicap;
 	public enum Direction{
@@ -136,6 +136,9 @@ public class GameFrame extends Game{
 							board[i][j].render(gd);
 					}
 				}
+				
+				if(ghostPiece != null)
+					ghostPiece.render(gd);
 		
 				if(!nextPieces.isEmpty())
 					displayNext(gd);
@@ -148,6 +151,7 @@ public class GameFrame extends Game{
 				else if(currentPiece != null){
 						currentPiece.render(gd);		
 				}
+
 				
 				scoreFont.drawString(gd, score+"", GameFont.CENTER, 70, 360, 120);
 				gameFont.drawString(gd, currentLvl+"", GameFont.CENTER, 70, 450, 120);
@@ -270,7 +274,7 @@ public class GameFrame extends Game{
 				nextPieces2.remove(0);
 			}
 			spawn = false;
-
+			setGhostPiece();
 		}
 		if(fallTime >= fallDelay) {
 
@@ -280,7 +284,7 @@ public class GameFrame extends Game{
 				fallTime -= fallDelay;
 			}
 			else{
-				if(!checkCollision(GameFrame.Direction.Down)){
+				if(!checkCollision(GameFrame.Direction.Down, currentPiece)){
 					currentPiece.moveDown(speed);
 				}
 				else{
@@ -329,16 +333,21 @@ public class GameFrame extends Game{
 		if(keyPressed(KeyEvent.VK_LEFT)) {
 			moveTime = 0;
 			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Left)){
-					currentPiece.moveLeft(boardLocX);
+				if(!checkCollision(Direction.Left, currentPiece)){
+					currentPiece.moveLeft();
+					ghostPiece.setLocation(currentPiece.getX(), 0);
+					moveGhostPiece();
 				}
 			}
 		}
 		else if(keyPressed(KeyEvent.VK_RIGHT)) {
 			moveTime = 0;
 			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Right))
-					currentPiece.moveRight(boardLocX);
+				if(!checkCollision(Direction.Right, currentPiece)){
+					currentPiece.moveRight();
+					ghostPiece.setLocation(currentPiece.getX(), 0);
+					moveGhostPiece();
+				}
 			}
 		}
 		
@@ -346,8 +355,10 @@ public class GameFrame extends Game{
 		if(keyDown(KeyEvent.VK_LEFT)) {
 			if(moveTime >= moveDelay) {
 				if(currentPiece.getY() >= 0){
-					if(!checkCollision(Direction.Left)){
-						currentPiece.moveLeft(boardLocX);
+					if(!checkCollision(Direction.Left, currentPiece)){
+						currentPiece.moveLeft();
+						ghostPiece.setLocation(currentPiece.getX(), 0);
+						moveGhostPiece();
 					}
 				}
 				moveTime = 0;
@@ -357,8 +368,11 @@ public class GameFrame extends Game{
 		else if(keyDown(KeyEvent.VK_RIGHT)) {
 			if(moveTime >= moveDelay) {
 				if(currentPiece.getY() >= 0){
-					if(!checkCollision(Direction.Right))
-						currentPiece.moveRight(boardLocX);
+					if(!checkCollision(Direction.Right, currentPiece)){
+						currentPiece.moveRight();
+						ghostPiece.setLocation(currentPiece.getX(), 0);
+						moveGhostPiece();
+					}
 				}
 				moveTime = 0;
 			}
@@ -367,9 +381,10 @@ public class GameFrame extends Game{
 		
 		if(keyDown(KeyEvent.VK_DOWN)) {
 			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Down)) {
+				if(!checkCollision(Direction.Down, currentPiece)) {
 					currentPiece.moveDown(speed);
 					score++;
+					fallTime = 0;
 				}
 			}
 		}
@@ -406,12 +421,20 @@ public class GameFrame extends Game{
 
 
 		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
-			if(currentPiece.getY() > 0 && !checkRotation(Direction.Left))
+			if(currentPiece.getY() > 0 && !checkRotation(Direction.Left)){
 				currentPiece.rotateLeft();
+				ghostPiece.rotateLeft();
+				ghostPiece.setLocation(currentPiece.getX(), 0);
+				moveGhostPiece();
+			}
 		}
 		else if(keyPressed('X')) {
-			if(currentPiece.getY() > 0 && !checkRotation(Direction.Right))
+			if(currentPiece.getY() > 0 && !checkRotation(Direction.Right)){
 				currentPiece.rotateRight();
+				ghostPiece.rotateRight();
+				ghostPiece.setLocation(currentPiece.getX(), 0);
+				moveGhostPiece();
+			}
 		}
 
 
@@ -473,12 +496,11 @@ public class GameFrame extends Game{
 		
 	}
 
-	public boolean checkCollision(Direction d){
+	public boolean checkCollision(Direction d, Tetrimino currentPiece){
 		int row = currentPiece.matrix.length;
 		int col = currentPiece.matrix[0].length;
 		int i;
-		
-		
+
 		switch(d){
 		case Left:
 			if(currentPiece.getX() <= 0){
@@ -492,7 +514,6 @@ public class GameFrame extends Game{
 									return true;
 							}
 						}
-						
 					}
 				}
 				return false;
@@ -552,6 +573,43 @@ public class GameFrame extends Game{
 		}
 
 		return false;
+	}
+	
+	public void setGhostPiece(){
+		String img = "img/ghost.png";
+		if(currentPiece instanceof HookPiece){
+			ghostPiece = new HookPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof JPiece){
+			ghostPiece = new JPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof LinePiece){
+			ghostPiece = new LinePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof LPiece){
+			ghostPiece = new LPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof RectanglePiece){
+			ghostPiece = new RectanglePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof SPiece){
+			ghostPiece = new SPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof SquarePiece){
+			ghostPiece = new SquarePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof TPiece){
+			ghostPiece = new TPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		else if(currentPiece instanceof ZPiece){
+			ghostPiece = new ZPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+		}
+		moveGhostPiece();
+	}
+	
+	public void moveGhostPiece(){
+		while(!checkCollision(Direction.Down, ghostPiece))
+			ghostPiece.moveDown(speed);
 	}
 
 	// put every type of tetriminos in availablepieces List

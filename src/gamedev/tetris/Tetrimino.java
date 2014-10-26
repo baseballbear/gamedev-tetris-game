@@ -34,7 +34,7 @@ public abstract class Tetrimino {
 		}
 	}
 	
-	public void moveLeft(int boardX) {
+	public void moveLeft() {
 
 		row = matrix.length;
 		--x;
@@ -45,7 +45,7 @@ public abstract class Tetrimino {
 			}
 		}
 	}
-	public void moveRight(int boardX) {
+	public void moveRight() {
 		++x;
 		row = matrix.length;
 		for(int i = 0; i < row; i++){
