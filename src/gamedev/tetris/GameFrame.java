@@ -22,7 +22,7 @@ import com.golden.gamedev.object.font.SystemFont;
 
 public class GameFrame extends Game{
 
-	private int width = 10, height = 20, 
+	private int width = 10, height = 23, 
 			size = 25, boardLocX, boardLocY,
 			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0,
 				maxLevel = 15, currentLvl, linesToClear, score;
@@ -34,7 +34,7 @@ public class GameFrame extends Game{
 	dropPieces,
 	availablePieces; // all the types of tetriminos
 	Tetrimino currentPiece; // current piece falling 
-	boolean spawn = !false, move = true, shuffle = true, save = false;
+	boolean spawn = true;
 	int handicap;
 	public enum Direction{
 		Left, Down, Right;
@@ -67,7 +67,7 @@ public class GameFrame extends Game{
 		nextPieces2 = new ArrayList<Tetrimino>();
 		savedPieces = new ArrayList<Tetrimino>();
 		boardLocX = (getWidth() / 2) - (width*size)/2;
-		boardLocY = (getHeight() / 2) - (height*size)/2;
+		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2;
 		gameFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 25), Color.black); // Cooper Std Black
 		scoreFont = new SystemFont(new Font("Times New Roman", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		initializeBoard();
@@ -112,7 +112,7 @@ public class GameFrame extends Game{
 
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < height; j++){
-				board[i][j] = new Block(getImage(image), i*size + boardLocX, j*size + boardLocY);
+				board[i][j] = new Block(getImage(image), i*size + boardLocX, j*size + boardLocY - 3*size);
 			}
 		}
 		
@@ -130,7 +130,8 @@ public class GameFrame extends Game{
 		
 				for (int i = 0; i < width; i++) {
 					for (int j = 0; j < height; j++) {
-						board[i][j].render(gd);
+						if(j >= 3)
+							board[i][j].render(gd);
 					}
 				}
 		
@@ -138,11 +139,13 @@ public class GameFrame extends Game{
 					displayNext(gd);
 				if(!savedPieces.isEmpty())
 					displaySaved(gd);
+				if(!nextPieces.isEmpty())
 				if(isTopOccupied()){
 					gameOver(gd);
 				}
-				else if(currentPiece != null)
-					currentPiece.render(gd);
+				else if(currentPiece != null){
+						currentPiece.render(gd);		
+				}
 				
 				scoreFont.drawString(gd, score+"", GameFont.CENTER, 70, 360, 120);
 				gameFont.drawString(gd, currentLvl+"", GameFont.CENTER, 70, 450, 120);
@@ -209,7 +212,6 @@ public class GameFrame extends Game{
 			}
 			if(lineComplete) {
 				lines++;
-				System.out.println("line clear");
 				for(int n = i; n > 0; n--) {
 					for(int m = 0; m < width; m++) {
 						board[m][n].setOccupied(board[m][n - 1].isOccupied());
@@ -226,7 +228,6 @@ public class GameFrame extends Game{
 			lineComplete = true;
 		}
 		if(lines > 0) {
-			System.out.println(lines);
 			linesToClear -= lines;
 			if(linesToClear <= 0) {
 				currentLvl++;
@@ -277,7 +278,6 @@ public class GameFrame extends Game{
 				fallTime -= fallDelay;
 			}
 			else{
-				
 				if(!checkCollision(GameFrame.Direction.Down)){
 					currentPiece.moveDown(speed);
 				}
@@ -296,12 +296,9 @@ public class GameFrame extends Game{
 
 	public boolean isTopOccupied(){
 
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < 2; j++){
-				if(board[i][j].isOccupied()){
-					return true;
-				}
-
+		if(currentPiece.getY() < 3){
+			if(board[currentPiece.getX()][currentPiece.getY() + 1].isOccupied()){
+				return true;
 			}
 		}
 		return false;
@@ -381,24 +378,21 @@ public class GameFrame extends Game{
 			if(saveCount < 3){
 				saveCount++;
 				if(savedPieces.size() < 3){
+					currentPiece.setLocation(3, 0);
 					savedPieces.add(currentPiece);
 					spawn = true;
-				}
+			}
 				else{
-					//	if(saveCount < 2){
+				//	if(saveCount < 2){
 					Tetrimino piece = savedPieces.get(0);
 					savedPieces.remove(0);
 					savedPieces.add(currentPiece);
 					piece.setLocation(3, 0);
 					currentPiece = piece;
-					//	}
+				//	}
 				}
 			}
-
 		}
-		
-		
-		
 		if(keyPressed(KeyEvent.VK_ESCAPE)) {
 			currentScreen = Screen.PAUSE_SCREEN;
 			fallTime = 0;
@@ -515,7 +509,7 @@ public class GameFrame extends Game{
 						return true;
 			}
 			for(int j = 0; j < col; j++){
-				for(i = row - 2; i <= row - 1; i++)
+				for(i = 0; i < row; i++)
 					if(currentPiece.matrix[i][j].isOccupied()) {
 						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied()){
 							return true;
@@ -558,36 +552,35 @@ public class GameFrame extends Game{
 	public void initializePieces(){
 		availablePieces = new ArrayList<Tetrimino>();
 		Tetrimino t;
-		int x = 3, y = -6;
+		int x = 3, y = 1;
 		String block = "img/I block.png";
-		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
 
-		x = 3; y = -4;
 		block = "img/J block.png";
-		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
 
 		block = "img/L block.png";
-		t = new LPiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new LPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
 
 		block = "img/T block.png";
-		t = new TPiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new TPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
 
-		y = -1;
+		y = 0;
 
 		block = "img/S block.png";
-		t = new SPiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new SPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
 
 		block = "img/Z block.png";
-		t = new ZPiece(getImage(block), x, y, boardLocX, boardLocY);
+		t = new ZPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);	
 
 		block = "img/square Block.png";
-		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY);
+		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
 
 	}

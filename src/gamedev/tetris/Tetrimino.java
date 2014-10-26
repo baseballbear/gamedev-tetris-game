@@ -26,8 +26,10 @@ public abstract class Tetrimino {
 		for(int i = 0; i < row; i++){
 			col = matrix[i].length;
 			for(int j = 0; j < col; j++){
-				if(matrix[i][j].isOccupied())
-					matrix[i][j].render(g);
+				if(matrix[i][j].isOccupied()){
+					if(matrix[i][j].getY() >= 2 * height)
+						matrix[i][j].render(g);
+				}
 			}
 		}
 	}
@@ -66,9 +68,16 @@ public abstract class Tetrimino {
 		}
 	}
 	
-	
-	
 	public void setLocation(int x, int y){
+		this.x = x;
+		this.y = y;
+		
+		for(int i = 0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				matrix[i][j].setX((x + j) * width + boardX);
+				matrix[i][j].setY((y + i) * height + boardY);
+			}
+		}
 		
 	}
 	public Block[][] getMatrix() {

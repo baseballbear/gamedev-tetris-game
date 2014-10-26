@@ -22,20 +22,5 @@ public class LinePiece extends Tetrimino{
 		matrix[2][3].setOccupied(true);
 	}
 	
-	public void setLocation(int x, int y){
-		matrix[3][0].setX((x + 0) * width + boardX);
-		matrix[3][0].setY((y + 3) * height + boardY);
-		
-		matrix[3][1].setX((x + 1) * width + boardX);
-		matrix[3][1].setY((y + 3) * height + boardY);
-		
-		matrix[3][2].setX((x + 2) * width + boardX);
-		matrix[3][2].setY((y + 3) * height + boardY);
-		
-		matrix[3][3].setX((x + 3) * width + boardX);
-		matrix[3][3].setY((y + 3) * height + boardY);
-		
-	}
-		
 	
 }

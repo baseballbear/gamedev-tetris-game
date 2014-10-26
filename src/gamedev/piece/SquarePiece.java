@@ -24,15 +24,7 @@ public class SquarePiece extends Tetrimino{
 		}
 		
 	}
-	public void setLocation(int x, int y){
-		for(int i = 0; i < row; i++){
-			for(int j = 0; j < col; j++){
-				matrix[i][j].setX((x + j) * width + boardX);
-				matrix[i][j].setY((y + i) * height + boardY);
-			}
-		}
-		
-	}
+	
 	
 
 	

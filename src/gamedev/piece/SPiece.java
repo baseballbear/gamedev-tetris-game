@@ -25,19 +25,6 @@ public class SPiece extends Tetrimino{
 		matrix[2][0].setOccupied(true);
 		matrix[2][1].setOccupied(true);
 	}
-	public void setLocation(int x, int y){
-		matrix[1][1].setX((x + 1) * width + boardX);
-		matrix[1][1].setY((y + 1) * height + boardY);
-		
-		matrix[1][2].setX((x + 2) * width + boardX);
-		matrix[1][2].setY((y + 1) * height + boardY);
-		
-		matrix[2][0].setX((x + 0) * width + boardX);
-		matrix[2][0].setY((y + 2) * height + boardY);
-		
-		matrix[2][1].setX((x + 1) * width + boardX);
-		matrix[2][1].setY((y + 2) * height + boardY);
-		
-	}
+	
 	
 }
