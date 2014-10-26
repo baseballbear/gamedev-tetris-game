@@ -419,8 +419,8 @@ public class GameFrame extends Game{
 		}
 		
 		if(keyPressed(KeyEvent.VK_SPACE)) {
-			//currentPiece.quickDrop();
-			//spawn = true;
+			currentPiece.setLocation(ghostPiece.getX(), ghostPiece.getY());
+			
 		}else if(keyPressed(KeyEvent.VK_R)) {
 			//	initResources();
 		}
