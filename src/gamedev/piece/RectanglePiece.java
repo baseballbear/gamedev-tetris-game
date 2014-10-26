@@ -13,7 +13,7 @@ public class RectanglePiece extends Tetrimino{
 		this.boardX = boardX;
 		this.boardY = boardY;
 		initializeMatrix(image);
-		super.imageName = "small_i3";
+		super.imageName = "unknown_block";
 	
 		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 3; j++){
