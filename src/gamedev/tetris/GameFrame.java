@@ -298,7 +298,7 @@ public class GameFrame extends Game{
 		
 		for(int i = 0; i < currentPiece.getRow(); i++){
 			for(int j = 0; j < currentPiece.getCol(); j++){
-				if(currentPiece.getY() < 3 && currentPiece.getX() + j >= 0){
+				if(currentPiece.getY() < 3 && currentPiece.getX() + j >= 0 && currentPiece.getX() + j < width){
 					if(board[currentPiece.getX() + j][currentPiece.getY() + 1].isOccupied()){
 						return true;
 					}
