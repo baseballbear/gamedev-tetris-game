@@ -410,6 +410,7 @@ public class GameFrame extends Game{
 					savedPieces.add(currentPiece);
 					piece.setLocation(3, 0);
 					currentPiece = piece;
+					setGhostPiece();
 				//	}
 				}
 			}
