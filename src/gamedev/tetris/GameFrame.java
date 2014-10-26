@@ -1,8 +1,10 @@
 package gamedev.tetris;
 
+import gamedev.piece.HookPiece;
 import gamedev.piece.JPiece;
 import gamedev.piece.LPiece;
 import gamedev.piece.LinePiece;
+import gamedev.piece.RectanglePiece;
 import gamedev.piece.SPiece;
 import gamedev.piece.SquarePiece;
 import gamedev.piece.TPiece;
@@ -12,14 +14,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.golden.gamedev.Game;
-import com.golden.gamedev.engine.BaseInput;
-import com.golden.gamedev.engine.input.AWTInput;
 import com.golden.gamedev.object.GameFont;
 import com.golden.gamedev.object.font.SystemFont;
 
@@ -43,7 +42,6 @@ public class GameFrame extends Game{
 		Left, Down, Right;
 	}
 	
-	BaseInput input;
 	
 	public enum Screen {
 		GAME_SCREEN,
@@ -91,8 +89,6 @@ public class GameFrame extends Game{
 
 		currentScreen = Screen.MAIN_MENU;
 		
-		input = new InputListener();
-		input.refresh();
 	}
 	
 	private void initializeButtons() {
@@ -218,9 +214,6 @@ public class GameFrame extends Game{
 				getInput(time);
 				break;
 			case MAIN_MENU:
-				input.update(time);
-				input.isMouseDown(input.getMouseReleased());
-//				input.isKeyPressed('A');
 				getMainMenuInput();
 				break;
 			case GAME_OVER:
@@ -328,10 +321,14 @@ public class GameFrame extends Game{
 	}
 
 	public boolean isTopOccupied(){
-
-		if(currentPiece.getY() < 3){
-			if(board[currentPiece.getX()][currentPiece.getY() + 1].isOccupied()){
-				return true;
+		
+		for(int i = 0; i < currentPiece.getRow(); i++){
+			for(int j = 0; j < currentPiece.getCol(); j++){
+				if(currentPiece.getY() < 3 && currentPiece.getX() + j >= 0 && currentPiece.getX() + j < width){
+					if(board[currentPiece.getX() + j][currentPiece.getY() + 1].isOccupied()){
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -615,6 +612,15 @@ public class GameFrame extends Game{
 		block = "img/square Block.png";
 		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
 		availablePieces.add(t);
+		
+		block = "img/rectangle block.png";
+		t = new RectanglePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		availablePieces.add(t);
+		
+		block = "img/hook block.png";
+		t = new HookPiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		availablePieces.add(t);
+		
 
 	}
 
@@ -705,134 +711,5 @@ public class GameFrame extends Game{
 		}
 	}
 	
-	private class InputListener implements BaseInput {
-
-		@Override
-		public void cleanup() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public int getKeyPressed() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getKeyReleased() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getMouseDX() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getMouseDY() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getMousePressed() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getMouseReleased() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getMouseX() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getMouseY() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public boolean isKeyDown(int arg0) {
-			
-			return false;
-		}
-
-		@Override
-		public boolean isKeyPressed(int i) {
-			System.out.println(i);
-			return false;
-		}
-
-		@Override
-		public boolean isKeyReleased(int arg0) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isMouseDown(int i) {
-			
-			return true;
-		}
-
-		@Override
-		public boolean isMouseExists() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isMousePressed(int i) {
-			return false;
-		}
-
-		@Override
-		public boolean isMouseReleased(int i) {
-			if(i == MouseEvent.BUTTON1)
-				System.out.println("mouse button 1 released");
-			return false;
-		}
-
-		@Override
-		public boolean isMouseVisible() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void mouseMove(int arg0, int arg1) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void refresh() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void setMouseVisible(boolean arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void update(long arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-
+	
 }
