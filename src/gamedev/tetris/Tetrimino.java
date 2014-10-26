@@ -15,6 +15,13 @@ public abstract class Tetrimino {
 	protected int boardX, boardY;
 	protected int chance = 100;
 	
+	public void resetOrientation(){
+		for(int i = 0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				matrix[i][j].setOccupied(false);
+			}
+		}
+	}
 	
 	public Tetrimino(int x, int y){
 		this.x = x;

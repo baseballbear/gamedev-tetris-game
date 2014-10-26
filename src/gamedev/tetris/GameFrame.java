@@ -485,11 +485,12 @@ public class GameFrame extends Game{
 			//	initResources();
 		}
 		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
-			if(extreme) {
+			if(!extreme) {
 				if(saveCount < 3){
 					saveCount++;
 					if(savedPieces.size() < 3){
 						currentPiece.setLocation(3, 0);
+						currentPiece.resetOrientation();
 						savedPieces.add(currentPiece);
 						spawn = true;
 				}
@@ -499,6 +500,7 @@ public class GameFrame extends Game{
 						savedPieces.remove(0);
 						savedPieces.add(currentPiece);
 						piece.setLocation(3, 0);
+						piece.resetOrientation();
 						currentPiece = piece;
 						setGhostPiece();
 					//	}
@@ -513,14 +515,14 @@ public class GameFrame extends Game{
 
 
 		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
-			if(currentPiece.getY() > 0 && !checkRotation(Direction.Left)){
+			if(!checkRotation(Direction.Left)){
 				currentPiece.rotateLeft();
 				ghostPiece.rotateLeft();
 				moveGhostPiece();
 			}
 		}
 		else if(keyPressed('X')) {
-			if(currentPiece.getY() > 0 && !checkRotation(Direction.Right)){
+			if(!checkRotation(Direction.Right)){
 				currentPiece.rotateRight();
 				ghostPiece.rotateRight();
 				moveGhostPiece();
@@ -723,15 +725,15 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/rectangle block.png";
-		t = new RectanglePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		t = new RectanglePiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
 			availablePieces.add(t);
 		}
 		
 		block = "img/hook block.png";
-		t = new HookPiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		t = new HookPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
 		
-		if(!extreme){
+		if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
 			availablePieces.add(t);
 		}
 		else if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
@@ -809,6 +811,9 @@ public class GameFrame extends Game{
 						initializePieces();
 						currentScreen = Screen.GAME_SCREEN;
 					} else if(b.getBtnName().equals("ExitToMainMenu")) {
+						initializeBoard();
+						initGameState();
+						initializePieces();
 						currentScreen = Screen.MAIN_MENU;
 					} else if(b.getBtnName().equals("Resume")) {
 						currentScreen = Screen.GAME_SCREEN;

@@ -24,4 +24,12 @@ public class ZPiece extends Tetrimino{
 	}
 	
 	
+	public void resetOrientation() {
+		super.resetOrientation();
+		matrix[1][0].setOccupied(true);
+		matrix[1][1].setOccupied(true);
+		matrix[2][1].setOccupied(true);
+		matrix[2][2].setOccupied(true);
+	}
+	
 }

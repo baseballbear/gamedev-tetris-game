@@ -22,7 +22,13 @@ public class TPiece extends Tetrimino{
 	}
 	
 
-	
+	public void resetOrientation() {
+		super.resetOrientation();
+		matrix[0][1].setOccupied(true);
+		matrix[1][0].setOccupied(true);
+		matrix[1][1].setOccupied(true);
+		matrix[1][2].setOccupied(true);
+	}
 	
 
 }

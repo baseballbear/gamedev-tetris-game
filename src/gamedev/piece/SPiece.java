@@ -21,5 +21,12 @@ public class SPiece extends Tetrimino{
 		matrix[2][1].setOccupied(true);
 	}
 	
+	public void resetOrientation() {
+		super.resetOrientation();
+		matrix[1][1].setOccupied(true);
+		matrix[1][2].setOccupied(true);
+		matrix[2][0].setOccupied(true);
+		matrix[2][1].setOccupied(true);
+	}
 	
 }

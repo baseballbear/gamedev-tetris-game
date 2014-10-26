@@ -22,6 +22,17 @@ public class HookPiece extends Tetrimino{
 		matrix[2][2].setOccupied(true);
 		matrix[3][1].setOccupied(true);	
 	}
+
+	public void resetOrientation() {
+		super.resetOrientation();
+		matrix[0][1].setOccupied(true);
+		matrix[0][2].setOccupied(true);
+		matrix[1][2].setOccupied(true);
+		matrix[2][1].setOccupied(true);
+		matrix[2][2].setOccupied(true);
+		matrix[3][1].setOccupied(true);	
+	}
+	
 	
 	
 }

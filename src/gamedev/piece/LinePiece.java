@@ -21,5 +21,11 @@ public class LinePiece extends Tetrimino{
 		matrix[2][3].setOccupied(true);
 	}
 	
-	
+	public void resetOrientation() {
+		super.resetOrientation();
+		matrix[2][0].setOccupied(true);
+		matrix[2][1].setOccupied(true);
+		matrix[2][2].setOccupied(true);
+		matrix[2][3].setOccupied(true);
+	}
 }
