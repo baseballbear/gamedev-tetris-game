@@ -363,7 +363,6 @@ public class GameFrame extends Game{
 			if(currentPiece.getY() >= 0){
 				if(!checkCollision(Direction.Left, currentPiece)){
 					currentPiece.moveLeft();
-					ghostPiece.setLocation(currentPiece.getX(), 0);
 					moveGhostPiece();
 				}
 			}
@@ -373,7 +372,6 @@ public class GameFrame extends Game{
 			if(currentPiece.getY() >= 0){
 				if(!checkCollision(Direction.Right, currentPiece)){
 					currentPiece.moveRight();
-					ghostPiece.setLocation(currentPiece.getX(), 0);
 					moveGhostPiece();
 				}
 			}
@@ -385,7 +383,6 @@ public class GameFrame extends Game{
 				if(currentPiece.getY() >= 0){
 					if(!checkCollision(Direction.Left, currentPiece)){
 						currentPiece.moveLeft();
-						ghostPiece.setLocation(currentPiece.getX(), 0);
 						moveGhostPiece();
 					}
 				}
@@ -398,7 +395,6 @@ public class GameFrame extends Game{
 				if(currentPiece.getY() >= 0){
 					if(!checkCollision(Direction.Right, currentPiece)){
 						currentPiece.moveRight();
-						ghostPiece.setLocation(currentPiece.getX(), 0);
 						moveGhostPiece();
 					}
 				}
@@ -453,7 +449,6 @@ public class GameFrame extends Game{
 			if(currentPiece.getY() > 0 && !checkRotation(Direction.Left)){
 				currentPiece.rotateLeft();
 				ghostPiece.rotateLeft();
-				ghostPiece.setLocation(currentPiece.getX(), 0);
 				moveGhostPiece();
 			}
 		}
@@ -461,7 +456,6 @@ public class GameFrame extends Game{
 			if(currentPiece.getY() > 0 && !checkRotation(Direction.Right)){
 				currentPiece.rotateRight();
 				ghostPiece.rotateRight();
-				ghostPiece.setLocation(currentPiece.getX(), 0);
 				moveGhostPiece();
 			}
 		}
@@ -637,6 +631,7 @@ public class GameFrame extends Game{
 	}
 	
 	public void moveGhostPiece(){
+		ghostPiece.setLocation(currentPiece.getX(), currentPiece.getY());
 		while(!checkCollision(Direction.Down, ghostPiece))
 			ghostPiece.moveDown(speed);
 	}
