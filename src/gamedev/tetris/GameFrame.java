@@ -51,7 +51,7 @@ public class GameFrame extends Game{
 	List<Button> menuButtons,
 	pauseButtons;
 	
-	long fallTime, fallDelay, moveTime, moveDelay = 50;
+	long fallTime, fallDelay, moveTime, moveDelay = 100;
 
 	GameFont gameFont, scoreFont;
 	
