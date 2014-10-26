@@ -113,12 +113,14 @@ public class GameFrame extends Game{
 		extreme = false;
 		saveCount = 0;
 		fallTime = 0;
-		fallDelay = 900; // 900
 		moveTime = 0;
 		currentLvl = 1;
 		linesToClear = currentLvl * 5;
 		score = 0;
 		savedPieces.clear();
+
+		fallDelay = 960 - 60*currentLvl;
+
 	}
 
 	private void initializeBoard(){
