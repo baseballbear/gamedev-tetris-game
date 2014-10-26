@@ -163,7 +163,7 @@ public class GameFrame extends Game{
 		score = 0;
 		savedPieces.clear();
 
-		fallDelay = 960 - 60*currentLvl;
+		fallDelay = 900 - 60*currentLvl;
 
 	}
 
@@ -328,6 +328,7 @@ public class GameFrame extends Game{
 			linesToClear -= lines;
 			if(linesToClear <= 0) {
 				currentLvl++;
+				fallDelay = 960 - 60*currentLvl;
 				if(currentLvl == 15) {
 					// TODO: Game over
 				}
