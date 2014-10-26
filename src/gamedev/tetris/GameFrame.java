@@ -51,7 +51,7 @@ public class GameFrame extends Game{
 	List<Button> menuButtons,
 	pauseButtons;
 	
-	long fallTime, fallDelay, moveTime, moveDelay = 50;
+	long fallTime, fallDelay, moveTime, moveDelay = 90;
 
 	GameFont gameFont, scoreFont;
 	
@@ -320,6 +320,26 @@ public class GameFrame extends Game{
 	}
 
 	private void getInput(long time) {
+		/*
+		 * The piece wont move if the key is pressed very fast (if we only use keyDown) (because of the delay in keyDown)
+		 */
+		if(keyPressed(KeyEvent.VK_LEFT)) {
+			moveTime = 0;
+			if(currentPiece.getY() >= 0){
+				if(!checkCollision(Direction.Left)){
+					currentPiece.moveLeft(boardLocX);
+				}
+			}
+		}
+		else if(keyPressed(KeyEvent.VK_RIGHT)) {
+			moveTime = 0;
+			if(currentPiece.getY() >= 0){
+				if(!checkCollision(Direction.Right))
+					currentPiece.moveRight(boardLocX);
+			}
+		}
+		
+		
 		if(keyDown(KeyEvent.VK_LEFT)) {
 			if(moveTime >= moveDelay) {
 				if(currentPiece.getY() >= 0){
