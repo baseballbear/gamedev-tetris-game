@@ -28,7 +28,8 @@ public class GameFrame extends Game{
 	private int width = 10, height = 23, 
 			size = 25, boardLocX, boardLocY,
 			numOfPieces = 6, timer = 0, speed = 1, saveCount = 0,
-				maxLevel = 15, currentLvl, linesToClear, score, quickDropScore = 0;
+				maxLevel = 15, currentLvl, linesToClear, score, quickDropScore = 0,
+						middleLeft, middleRight, center;
 	private Block[][] board;
 
 	List<Tetrimino> savedPieces, // the pieces that were saved by the user
@@ -79,6 +80,10 @@ public class GameFrame extends Game{
 		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2;
 		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), Color.black); // Cooper Std Black
 		scoreFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 23), Color.black); // Cooper Std Black
+		
+		middleLeft = getWidth() / 4;
+		middleRight = getWidth() * 3 / 4;
+		center = getWidth()/2;
 		initializeBoard();
 		initGameState();
 		initializePieces();
@@ -93,31 +98,59 @@ public class GameFrame extends Game{
 	}
 	
 	private void initializeButtons() {
-		int offset = 200, center = getWidth()/2 - 75;
+		int offset = 200;
 		menuButtons = new ArrayList<Button>();
-		menuButtons.add(new Button(getImage("img/buttons/play.png"), center, 0 + offset, "Start"));
-		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), center, 70 + offset, "Highscores"));
-		menuButtons.add(new Button(getImage("img/buttons/help2.png"), center, 140 + offset, "Chance"));
-		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), center, 210 + offset, "Settings"));
+		menuButtons.add(new Button(getImage("img/buttons/play.png"), center - 75, 0 + offset, "Start"));
+		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), center - 75, 70 + offset, "Highscores"));
+		menuButtons.add(new Button(getImage("img/buttons/help2.png"), center - 75, 140 + offset, "Chance"));
+		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), center - 75, 210 + offset, "Settings"));
 
 		pauseButtons = new ArrayList<Button>();
-		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), center, 0 + offset, "Resume"));
-		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), center, 70 + offset, "Restart"));
-		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), center, 140 + offset, "ExitToMainMenu"));
+		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), center - 75, 0 + offset, "Resume"));
+		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), center - 75, 70 + offset, "Restart"));
+		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), center - 75, 140 + offset, "ExitToMainMenu"));
 		
-		int middleLeft = getWidth() / 4 - 75, middleRight = getWidth() * 3 / 4 - 75;
 		settingsButtons = new ArrayList<Button>();
-		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), middleLeft, 0 + offset, "handicaplabel"));
-		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), middleLeft, 70 + offset, "handicap1"));
-		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), middleLeft, 140 + offset, "handicap2"));
-		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), middleLeft, 210 + offset, "handicap3"));
-		settingsButtons.add(new Button(getImage("img/buttons/back.png"), middleLeft, 320 + offset, "settings_back"));
+		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), middleLeft - 75, 0 + offset, "handicaplabel"));
+		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), middleLeft - 75, 70 + offset, "handicap1"));
+		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), middleLeft - 75, 140 + offset, "handicap2"));
+		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), middleLeft - 75, 210 + offset, "handicap3"));
+		settingsButtons.add(new Button(getImage("img/buttons/back.png"), middleLeft - 75, 320 + offset, "settings_back"));
 		
-		settingsButtons.add(new Button(getImage("img/buttons/mode.png"), middleRight, 0 + offset, "GameMode"));
-		settingsButtons.add(new Button(getImage("img/buttons/classic2_pressed.png"), middleRight, 70 + offset, "Classic"));
-		settingsButtons.add(new Button(getImage("img/buttons/extreme2.png"), middleRight, 140 + offset, "Extreme"));
+		settingsButtons.add(new Button(getImage("img/buttons/mode.png"), middleRight - 75, 0 + offset, "GameMode"));
+		settingsButtons.add(new Button(getImage("img/buttons/classic2_pressed.png"), middleRight - 75, 70 + offset, "Classic"));
+		settingsButtons.add(new Button(getImage("img/buttons/extreme2.png"), middleRight - 75, 140 + offset, "Extreme"));
 		
 		chanceButtons = new ArrayList<Button>();
+		offset = 100;
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 0 + offset, "unknown_block -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 50 + offset, "small_j -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 100 + offset, "small_L -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 150 + offset, "small_t -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 200 + offset, "small_s -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 250 + offset, "small_z -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 300 + offset, "small_square -"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 350 + offset, "small_i3 -"));
+		
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 0 + offset, "unknown_block"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 50 + offset, "small_j"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 100 + offset, "small_L"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 150 + offset, "small_t"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 200 + offset, "small_s"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 250 + offset, "small_z"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 300 + offset, "small_square"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 350 + offset, "small_i3"));
+		
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 0 + offset, "unknown_block +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 50 + offset, "small_j +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 100 + offset, "small_L +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 150 + offset, "small_t +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 200 + offset, "small_s +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 250 + offset, "small_z +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 300 + offset, "small_square +"));
+		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 350 + offset, "small_i3 +"));
+		
+		chanceButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset, "chance_back"));
 	}
 
 	private void initGameState() {
@@ -200,7 +233,7 @@ public class GameFrame extends Game{
 			case MAIN_MENU:
 				gd.setColor(Color.black);
 				gd.fillRect(0, 0, getWidth(), getHeight());
-				
+					
 				for(Button b : menuButtons)
 					b.render(gd);
 				break;
@@ -218,7 +251,11 @@ public class GameFrame extends Game{
 					b.render(gd);
 				break;
 			case CHANCE_SCREEN:
+				gd.setColor(Color.black);
+				gd.fillRect(0, 0, getWidth(), getHeight());
 				
+				for(Button b : chanceButtons)
+					b.render(gd);
 				break;
 			default:
 				break;
@@ -254,10 +291,14 @@ public class GameFrame extends Game{
 			case SETTINGS_SCREEN:
 				getSettingScreenInput();
 				break;
+			case CHANCE_SCREEN:
+				getChanceScreenInput();
+				break;
 			default:
 				break;
 		}
 	}
+
 	private void checkLine() {
 		boolean lineComplete = true;
 		int lines = 0;
@@ -788,6 +829,14 @@ public class GameFrame extends Game{
 						currentScreen = Screen.SETTINGS_SCREEN;
 					} else if(b.getBtnName().equals("Chance")) {
 						currentScreen = Screen.CHANCE_SCREEN;
+
+						for(Button btn : chanceButtons) {
+							for(Tetrimino t : availablePieces) {
+								if(btn.getBtnName().equals(t.imageName)) {
+									btn.setLocation(center - 150 + (300 * t.getChance() / 100), btn.getY());
+								}
+							}
+						}
 					}
 				}
 		}
@@ -858,5 +907,30 @@ public class GameFrame extends Game{
 		}
 	}
 	
+
+
+	private void getChanceScreenInput() {
+		if(click()) {
+			int x = getMouseX(), y = getMouseY();
+			for(Button b : chanceButtons)
+				if(b.contains(x, y)) {
+					if(b.getBtnName().equals("chance_back")) {
+						for(Tetrimino t : availablePieces)
+							for(Button btn : chanceButtons)
+								if(btn.getBtnName().equals(t.getImageName()))
+									t.setChance((int) ((btn.getX() - (center - 150)) / 3));
+						currentScreen = Screen.MAIN_MENU;
+					}else if(b.getBtnName().endsWith(" +")) {
+						for(Button btn : chanceButtons)
+							if(b.getBtnName().equals(btn.getBtnName() + " +"))
+								btn.setLocation(Math.min(btn.getX() + 10, center + 150), btn.getY());
+					} else if(b.getBtnName().endsWith(" -")) {
+						for(Button btn : chanceButtons)
+							if(b.getBtnName().equals(btn.getBtnName() + " -"))
+								btn.setLocation(Math.max(btn.getX() - 10, center - 150), btn.getY());
+					}
+				}
+		}
+	}
 	
 }
