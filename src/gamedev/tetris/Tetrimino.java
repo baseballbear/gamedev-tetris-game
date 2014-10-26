@@ -68,9 +68,16 @@ public abstract class Tetrimino {
 		}
 	}
 	
-	
-	
 	public void setLocation(int x, int y){
+		this.x = x;
+		this.y = y;
+		
+		for(int i = 0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				matrix[i][j].setX((x + j) * width + boardX);
+				matrix[i][j].setY((y + i) * height + boardY);
+			}
+		}
 		
 	}
 	public Block[][] getMatrix() {

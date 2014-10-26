@@ -278,7 +278,6 @@ public class GameFrame extends Game{
 				fallTime -= fallDelay;
 			}
 			else{
-				
 				if(!checkCollision(GameFrame.Direction.Down)){
 					currentPiece.moveDown(speed);
 				}
@@ -297,16 +296,6 @@ public class GameFrame extends Game{
 
 	public boolean isTopOccupied(){
 
-	/*	for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < 2; j++){
-				if(board[i][j].isOccupied()){
-					return true;
-				}
-
-			}
-		}
-		return false;
-	*/	
 		if(currentPiece.getY() < 3){
 			if(board[currentPiece.getX()][currentPiece.getY() + 1].isOccupied()){
 				return true;
@@ -369,17 +358,18 @@ public class GameFrame extends Game{
 			if(saveCount < 3){
 				saveCount++;
 				if(savedPieces.size() < 3){
+					currentPiece.setLocation(3, 0);
 					savedPieces.add(currentPiece);
 					spawn = true;
-				}
+			}
 				else{
-					//	if(saveCount < 2){
+				//	if(saveCount < 2){
 					Tetrimino piece = savedPieces.get(0);
 					savedPieces.remove(0);
 					savedPieces.add(currentPiece);
 					piece.setLocation(3, 0);
 					currentPiece = piece;
-					//	}
+				//	}
 				}
 			}
 		}
