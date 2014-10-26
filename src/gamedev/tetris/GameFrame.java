@@ -14,7 +14,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -51,13 +58,15 @@ public class GameFrame extends Game{
 		GAME_OVER,
 		PAUSE_SCREEN,
 		SETTINGS_SCREEN, 
-		CHANCE_SCREEN
+		CHANCE_SCREEN,
+		HIGH_SCORES_SCREEN
 	}
 	Screen currentScreen;
 	List<Button> menuButtons,
 			pauseButtons,
 			settingsButtons,
-			chanceButtons;
+			chanceButtons,
+			highScoresButtons;
 	
 	long fallTime, fallDelay, moveTime, moveDelay = 90;
 
@@ -92,7 +101,9 @@ public class GameFrame extends Game{
 		extreme = false;
 		handicapLvl = 0;
 		setHandicap();
-
+		
+		getHighScores();
+		
 		currentScreen = Screen.MAIN_MENU;
 		
 	}
@@ -104,6 +115,7 @@ public class GameFrame extends Game{
 		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), center - 75, 70 + offset, "Highscores"));
 		menuButtons.add(new Button(getImage("img/buttons/help2.png"), center - 75, 140 + offset, "Chance"));
 		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), center - 75, 210 + offset, "Settings"));
+		menuButtons.add(new Button(getImage("img/buttons/quit.png"), center - 75, 280 + offset, "Quit"));
 
 		pauseButtons = new ArrayList<Button>();
 		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), center - 75, 0 + offset, "Resume"));
@@ -151,6 +163,9 @@ public class GameFrame extends Game{
 		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 350 + offset, "small_i3 +"));
 		
 		chanceButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset, "chance_back"));
+
+		highScoresButtons = new ArrayList<Button>();
+		highScoresButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset, "hs_back"));
 	}
 
 	private void initGameState() {
@@ -257,6 +272,17 @@ public class GameFrame extends Game{
 				for(Button b : chanceButtons)
 					b.render(gd);
 				break;
+			case HIGH_SCORES_SCREEN:
+				gd.setColor(Color.black);
+				gd.fillRect(0, 0, getWidth(), getHeight());
+
+				gd.setColor(Color.white);
+				for(int i = 0; i < scores.size() && i < 10; i++)
+					gd.drawString(scores.get(i).toString(), 50, 50 + (i * 50));
+				
+				for(Button b : highScoresButtons)
+					b.render(gd);
+				break;
 			default:
 				break;
 		}
@@ -294,6 +320,8 @@ public class GameFrame extends Game{
 			case CHANCE_SCREEN:
 				getChanceScreenInput();
 				break;
+			case HIGH_SCORES_SCREEN:
+				getHighScoresScreenInput();
 			default:
 				break;
 		}
@@ -415,6 +443,7 @@ public class GameFrame extends Game{
 		gd.setColor(Color.yellow);
 		gd.setFont(big);
 		gd.drawString("Game Over", getWidth()/2 - 150, getHeight()/2);
+		scores.add(score);
 	}
 
 	private void getInput(long time) {
@@ -806,11 +835,13 @@ public class GameFrame extends Game{
 			for(Button b : pauseButtons)
 				if(b.contains(x, y))
 					if(b.getBtnName().equals("Restart")) {
+						scores.add(score);
 						initializeBoard();
 						initGameState();
 						initializePieces();
 						currentScreen = Screen.GAME_SCREEN;
 					} else if(b.getBtnName().equals("ExitToMainMenu")) {
+						scores.add(score);
 						initializeBoard();
 						initGameState();
 						initializePieces();
@@ -842,6 +873,14 @@ public class GameFrame extends Game{
 								}
 							}
 						}
+					} else if(b.getBtnName().equals("Highscores")) {
+						currentScreen = Screen.HIGH_SCORES_SCREEN;
+
+						Collections.sort(scores);
+						Collections.reverse(scores);
+					} else if(b.getBtnName().equals("Quit")) {
+						writeHighScores();
+						System.exit(0);
 					}
 				}
 		}
@@ -912,8 +951,6 @@ public class GameFrame extends Game{
 		}
 	}
 	
-
-
 	private void getChanceScreenInput() {
 		if(click()) {
 			int x = getMouseX(), y = getMouseY();
@@ -938,4 +975,50 @@ public class GameFrame extends Game{
 		}
 	}
 	
+	private List<Integer> scores;
+	
+	private void writeHighScores() {
+		try {
+			Collections.sort(scores);
+			Collections.reverse(scores);
+			
+			PrintWriter pw = new PrintWriter("Highscores.txt");
+			for(int i = 0; i < scores.size() && i < 10; i++)
+				pw.println(scores.get(i));
+			pw.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void getHighScores() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("Highscores.txt"));
+			String currentLine = "";
+			scores = new ArrayList<Integer>();
+			while((currentLine = br.readLine()) != null) {
+				scores.add((int) Integer.parseInt(currentLine));
+			}
+			
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void getHighScoresScreenInput() {
+		if(click()) {
+			int x = getMouseX(), y = getMouseY();
+			for(Button b : highScoresButtons)
+				if(b.contains(x, y)) {
+					if(b.getBtnName().equals("hs_back")) {
+						currentScreen = Screen.MAIN_MENU;
+					}
+				}
+			}
+			
+	}
+
 }
