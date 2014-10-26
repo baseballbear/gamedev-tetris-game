@@ -495,7 +495,6 @@ public class GameFrame extends Game{
 			for(int j = 0; j < col; j++){
 				for(i = row - 2; i <= row - 1; i++)
 					if(currentPiece.matrix[i][j].isOccupied()) {
-						System.out.println("i = " + i + " j = " + j);
 						if(board[currentPiece.getX() + j][currentPiece.getY() + i + 1].isOccupied()){
 							return true;
 						}
