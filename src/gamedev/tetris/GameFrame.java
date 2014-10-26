@@ -49,12 +49,14 @@ public class GameFrame extends Game{
 		MAIN_MENU,
 		GAME_OVER,
 		PAUSE_SCREEN,
-		SETTINGS_SCREEN
+		SETTINGS_SCREEN, 
+		CHANCE_SCREEN
 	}
 	Screen currentScreen;
 	List<Button> menuButtons,
 			pauseButtons,
-				settingsButtons;
+			settingsButtons,
+			chanceButtons;
 	
 	long fallTime, fallDelay, moveTime, moveDelay = 90;
 
@@ -91,27 +93,31 @@ public class GameFrame extends Game{
 	}
 	
 	private void initializeButtons() {
+		int offset = 200, center = getWidth()/2 - 75;
 		menuButtons = new ArrayList<Button>();
-		menuButtons.add(new Button(getImage("img/buttons/play.png"), 0, 0, "Start"));
-		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), 0, 70, "Highscores"));
-		menuButtons.add(new Button(getImage("img/buttons/help2.png"), 0, 140, "Help"));
-		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), 0, 210, "Settings"));
+		menuButtons.add(new Button(getImage("img/buttons/play.png"), center, 0 + offset, "Start"));
+		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), center, 70 + offset, "Highscores"));
+		menuButtons.add(new Button(getImage("img/buttons/help2.png"), center, 140 + offset, "Chance"));
+		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), center, 210 + offset, "Settings"));
 
 		pauseButtons = new ArrayList<Button>();
-		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), 0, 0, "Resume"));
-		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), 0, 70, "Restart"));
-		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), 0, 140, "ExitToMainMenu"));
+		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), center, 0 + offset, "Resume"));
+		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), center, 70 + offset, "Restart"));
+		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), center, 140 + offset, "ExitToMainMenu"));
 		
+		int middleLeft = getWidth() / 4 - 75, middleRight = getWidth() * 3 / 4 - 75;
 		settingsButtons = new ArrayList<Button>();
-		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), 0, 0, "handicaplabel"));
-		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), 0, 70, "handicap1"));
-		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), 0, 140, "handicap2"));
-		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), 0, 210, "handicap3"));
-		settingsButtons.add(new Button(getImage("img/buttons/back.png"), 0, 280, "settings_back"));
+		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), middleLeft, 0 + offset, "handicaplabel"));
+		settingsButtons.add(new Button(getImage("img/buttons/one2.png"), middleLeft, 70 + offset, "handicap1"));
+		settingsButtons.add(new Button(getImage("img/buttons/two2.png"), middleLeft, 140 + offset, "handicap2"));
+		settingsButtons.add(new Button(getImage("img/buttons/three2.png"), middleLeft, 210 + offset, "handicap3"));
+		settingsButtons.add(new Button(getImage("img/buttons/back.png"), middleLeft, 320 + offset, "settings_back"));
 		
-		settingsButtons.add(new Button(getImage("img/buttons/mode.png"), 170, 0, "GameMode"));
-		settingsButtons.add(new Button(getImage("img/buttons/classic2_pressed.png"), 170, 70, "Classic"));
-		settingsButtons.add(new Button(getImage("img/buttons/extreme2.png"), 170, 140, "Extreme"));
+		settingsButtons.add(new Button(getImage("img/buttons/mode.png"), middleRight, 0 + offset, "GameMode"));
+		settingsButtons.add(new Button(getImage("img/buttons/classic2_pressed.png"), middleRight, 70 + offset, "Classic"));
+		settingsButtons.add(new Button(getImage("img/buttons/extreme2.png"), middleRight, 140 + offset, "Extreme"));
+		
+		chanceButtons = new ArrayList<Button>();
 	}
 
 	private void initGameState() {
@@ -211,7 +217,9 @@ public class GameFrame extends Game{
 				for(Button b : settingsButtons)
 					b.render(gd);
 				break;
-			
+			case CHANCE_SCREEN:
+				
+				break;
 			default:
 				break;
 		}
@@ -778,6 +786,8 @@ public class GameFrame extends Game{
 					}
 					else if(b.getBtnName().equals("Settings")) {
 						currentScreen = Screen.SETTINGS_SCREEN;
+					} else if(b.getBtnName().equals("Chance")) {
+						currentScreen = Screen.CHANCE_SCREEN;
 					}
 				}
 		}
