@@ -59,7 +59,7 @@ public class GameFrame extends Game{
 			settingsButtons,
 			chanceButtons;
 	
-	long fallTime, fallDelay, moveTime, moveDelay = 90;
+	long fallTime, fallDelay, moveTime, moveDelay, downTime, downDelay;
 
 	GameFont gameFont, scoreFont;
 	
@@ -162,8 +162,10 @@ public class GameFrame extends Game{
 		linesToClear = currentLvl * 5;
 		score = 0;
 		savedPieces.clear();
-
-		fallDelay = 900 - 60*currentLvl;
+		downTime = 0;
+		downDelay = 15 - currentLvl;
+		moveDelay = 90;
+		fallDelay = 960 - 60*currentLvl;
 
 	}
 
@@ -468,13 +470,17 @@ public class GameFrame extends Game{
 		}
 		
 		if(keyDown(KeyEvent.VK_DOWN)) {
-			if(currentPiece.getY() >= 0){
-				if(!checkCollision(Direction.Down, currentPiece)) {
-					currentPiece.moveDown(speed);
-					score++;
-					fallTime = 0;
+			if(downTime >= downDelay){
+				if(currentPiece.getY() >= 0){
+					if(!checkCollision(Direction.Down, currentPiece)) {
+						currentPiece.moveDown(speed);
+						score++;
+						fallTime = 0;
+					}
 				}
+				downTime = 0;
 			}
+			downTime += time;
 		}
 		
 		if(keyPressed(KeyEvent.VK_SPACE)) {
