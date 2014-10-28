@@ -66,7 +66,10 @@ public class GameFrame extends Game{
 			pauseButtons,
 			settingsButtons,
 			chanceButtons,
-			highScoresButtons;
+			highScoresButtons,
+			gameOverButtons;
+	
+	List<Integer> tetlist;
 	
 	long fallTime, fallDelay, moveTime, moveDelay, downTime, downDelay;
 
@@ -85,8 +88,8 @@ public class GameFrame extends Game{
 		nextPieces = new ArrayList<Tetrimino>();
 		nextPieces2 = new ArrayList<Tetrimino>();
 		savedPieces = new ArrayList<Tetrimino>();
-		boardLocX = (getWidth() / 2) - (width*size)/2;
-		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2;
+		boardLocX = (getWidth() / 2) - (width*size)/2 - 55;
+		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2 - 2*size;
 		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), Color.black); // Cooper Std Black
 		scoreFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		
@@ -104,6 +107,11 @@ public class GameFrame extends Game{
 		
 		getHighScores();
 		
+		tetlist = new ArrayList<Integer>();
+		for(int i = 0; i < 7; i++) {
+			tetlist.add(50);
+		}
+		
 		currentScreen = Screen.MAIN_MENU;
 		
 	}
@@ -113,7 +121,7 @@ public class GameFrame extends Game{
 		menuButtons = new ArrayList<Button>();
 		menuButtons.add(new Button(getImage("img/buttons/play.png"), center - 75, 0 + offset, "Start"));
 		menuButtons.add(new Button(getImage("img/buttons/highscores2.png"), center - 75, 70 + offset, "Highscores"));
-		menuButtons.add(new Button(getImage("img/buttons/help2.png"), center - 75, 140 + offset, "Chance"));
+		menuButtons.add(new Button(getImage("img/buttons/frequency_button.png"), center - 75, 140 + offset, "Chance"));
 		menuButtons.add(new Button(getImage("img/buttons/settings2.png"), center - 75, 210 + offset, "Settings"));
 		menuButtons.add(new Button(getImage("img/buttons/quit.png"), center - 75, 280 + offset, "Quit"));
 
@@ -121,6 +129,10 @@ public class GameFrame extends Game{
 		pauseButtons.add(new Button(getImage("img/buttons/resume.png"), center - 75, 0 + offset, "Resume"));
 		pauseButtons.add(new Button(getImage("img/buttons/restart.png"), center - 75, 70 + offset, "Restart"));
 		pauseButtons.add(new Button(getImage("img/buttons/quit.png"), center - 75, 140 + offset, "ExitToMainMenu"));
+
+		gameOverButtons = new ArrayList<Button>();
+		gameOverButtons.add(new Button(getImage("img/buttons/restart.png"), center - 75, 140 + offset, "Restart"));
+		gameOverButtons.add(new Button(getImage("img/buttons/quit.png"), center - 75, 210 + offset, "ExitToMainMenu"));
 		
 		settingsButtons = new ArrayList<Button>();
 		settingsButtons.add(new Button(getImage("img/buttons/handicap2.png"), middleLeft - 75, 0 + offset, "handicaplabel"));
@@ -135,32 +147,30 @@ public class GameFrame extends Game{
 		
 		chanceButtons = new ArrayList<Button>();
 		offset = 100;
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 0 + offset, "unknown_block -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 50 + offset, "small_j -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 100 + offset, "small_L -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 150 + offset, "small_t -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 200 + offset, "small_s -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 250 + offset, "small_z -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 300 + offset, "small_square -"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleLeft, 350 + offset, "small_i3 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 354 + offset, "small_i3"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 54 + offset, "small_j"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 104 + offset, "small_L"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 154 + offset, "small_t"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 204 + offset, "small_s"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 254 + offset, "small_z"));
+		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 304 + offset, "small_square"));
 		
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 0 + offset, "unknown_block"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 50 + offset, "small_j"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 100 + offset, "small_L"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 150 + offset, "small_t"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 200 + offset, "small_s"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 250 + offset, "small_z"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 300 + offset, "small_square"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), center, 350 + offset, "small_i3"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 50 + offset, "small_j -"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 100 + offset, "small_L -"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 150 + offset, "small_t -"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 200 + offset, "small_s -"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 250 + offset, "small_z -"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 300 + offset, "small_square -"));
+		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 350 + offset, "small_i3 -"));
+
 		
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 0 + offset, "unknown_block +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 50 + offset, "small_j +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 100 + offset, "small_L +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 150 + offset, "small_t +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 200 + offset, "small_s +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 250 + offset, "small_z +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 300 + offset, "small_square +"));
-		chanceButtons.add(new Button(getImage("img/Slider.png"), middleRight, 350 + offset, "small_i3 +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 50 + offset, "small_j +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 100 + offset, "small_L +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 150 + offset, "small_t +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 200 + offset, "small_s +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 250 + offset, "small_z +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 300 + offset, "small_square +"));
+		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 350 + offset, "small_i3 +"));
 		
 		chanceButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset, "chance_back"));
 
@@ -189,7 +199,7 @@ public class GameFrame extends Game{
 
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < height; j++){
-				board[i][j] = new Block(getImage(image), i*size + boardLocX, j*size + boardLocY - 3*size);
+				board[i][j] = new Block(getImage(image), i*size + boardLocX + 65, j*size + boardLocY - 3*size + 49);
 			}
 		}
 		
@@ -213,9 +223,9 @@ public class GameFrame extends Game{
 		
 				gd.setColor(Color.white);
 				
-				String boardImg = "img/board_classic.png";
+				String boardImg = "img/board_classic_new.png";
 				if(extreme)
-					boardImg = "img/board_extreme.png";
+					boardImg = "img/board_extreme_new.png";
 				gd.drawImage(getImage(boardImg), boardLocX - 126, boardLocY - 15, null);
 		
 				for (int i = 0; i < width; i++) {
@@ -234,16 +244,19 @@ public class GameFrame extends Game{
 					displaySaved(gd);
 				if(!nextPieces.isEmpty())
 				if(isTopOccupied()){
-					gameOver(gd);
+					//gameOver(gd);
+					currentScreen = Screen.GAME_OVER;
+					spawn = false;
+					scores.add(score);
 				}
 				else if(currentPiece != null){
 						currentPiece.render(gd);		
 				}
 
 				
-				scoreFont.drawString(gd, score+"", GameFont.CENTER, 70, 360, 120);
-				gameFont.drawString(gd, currentLvl+"", GameFont.CENTER, 70, 450, 120);
-				gameFont.drawString(gd, linesToClear+"", GameFont.CENTER, 70, 530, 120);
+				scoreFont.drawString(gd, score+"", GameFont.CENTER, 270, 40, 120);
+				gameFont.drawString(gd, currentLvl+"", GameFont.CENTER, 70, 435, 120);
+				gameFont.drawString(gd, linesToClear+"", GameFont.CENTER, 70, 395, 120);
 			
 				
 				break;
@@ -255,6 +268,8 @@ public class GameFrame extends Game{
 					b.render(gd);
 				break;
 			case GAME_OVER:
+				for(Button b : gameOverButtons)
+					b.render(gd);
 				break;
 			case PAUSE_SCREEN:
 				for(Button b : pauseButtons)
@@ -270,20 +285,25 @@ public class GameFrame extends Game{
 			case CHANCE_SCREEN:
 				gd.setColor(Color.black);
 				gd.fillRect(0, 0, getWidth(), getHeight());
-				
-				for(Button b : chanceButtons)
+				gd.drawImage(getImage("img/frequency.png/"), 140, 60, null);
+				for(Button b : chanceButtons) {
 					b.render(gd);
+					if(!b.getBtnName().endsWith(" -") && !b.getBtnName().endsWith(" +") && !b.getBtnName().equals("chance_back")) {
+						gd.drawImage(getImage("img/smallpieces/" + b.getBtnName() + ".png"), 50, (int) b.getY(), null);
+					}
+				}
 				break;
 			case HIGH_SCORES_SCREEN:
 				gd.setColor(Color.black);
 				gd.fillRect(0, 0, getWidth(), getHeight());
-
+				gd.drawImage(getImage("img/gameover.png/"), 0, 0, null);
 				gd.setColor(Color.white);
 				for(int i = 0; i < scores.size() && i < 10; i++)
 					gd.drawString(scores.get(i).toString(), 50, 50 + (i * 50));
 				
-				for(Button b : highScoresButtons)
+				for(Button b : highScoresButtons) {
 					b.render(gd);
+				}
 				break;
 			default:
 				break;
@@ -312,6 +332,7 @@ public class GameFrame extends Game{
 				getMainMenuInput();
 				break;
 			case GAME_OVER:
+				getGameOverInput();
 				break;
 			case PAUSE_SCREEN:
 				getPauseMenuInput();
@@ -446,6 +467,7 @@ public class GameFrame extends Game{
 		gd.setColor(Color.yellow);
 		gd.setFont(big);
 		gd.drawString("Game Over", getWidth()/2 - 150, getHeight()/2);
+		spawn = false;
 		scores.add(score);
 	}
 
@@ -521,7 +543,7 @@ public class GameFrame extends Game{
 			//	initResources();
 		}
 		if(keyPressed(KeyEvent.VK_SHIFT) || keyPressed(KeyEvent.VK_C)){
-			if(!extreme) {
+			if(extreme) {
 				if(saveCount < 3){
 					saveCount++;
 					if(savedPieces.size() < 3){
@@ -550,14 +572,14 @@ public class GameFrame extends Game{
 		}
 
 
-		if(keyPressed('Z') || keyPressed(KeyEvent.VK_UP)) {
+		if(keyPressed('Z')) {
 			if(!checkRotation(Direction.Left)){
 				currentPiece.rotateLeft();
 				ghostPiece.rotateLeft();
 				moveGhostPiece();
 			}
 		}
-		else if(keyPressed('X')) {
+		else if(keyPressed('X') || keyPressed(KeyEvent.VK_UP)) {
 			if(!checkRotation(Direction.Right)){
 				currentPiece.rotateRight();
 				ghostPiece.rotateRight();
@@ -568,10 +590,26 @@ public class GameFrame extends Game{
 
 	}
 	private void displayNext(Graphics2D gd){
-		int locx = boardLocX + 280;
+		int locx = 0;
 		int locy = 0;
 		for(int i = 0; i < 5; i++){
-			locy = boardLocY + 170 + i*70;
+			
+			if(i == 0){
+				locx = boardLocX + 345;
+				locy = boardLocY + 90;
+			}else if(i == 1){
+				locx = boardLocX + 375;
+				locy = boardLocY + 190;
+			}else if(i == 2){
+				locx = boardLocX + 380;
+				locy = boardLocY + 290;
+			}else if(i == 3){
+				locx = boardLocX + 375;
+				locy = boardLocY + 380;
+			}else if(i == 4){
+				locx = boardLocX + 340;
+				locy = boardLocY + 470;
+			}
 			gd.drawImage(getImage("img/smallpieces/" + nextPieces.get(i).getImageName() + ".png"), locx, locy, null);
 		}
 	}
@@ -581,6 +619,18 @@ public class GameFrame extends Game{
 		int locy = 0;
 		for(int i = 0; i < savedPieces.size(); i++){
 			locy = boardLocY + 10 + i * 60;
+			
+			if(i == 0){
+				locx = boardLocX - 28;
+				locy = boardLocY + 80;
+			}else if(i == 1){
+				locx = boardLocX - 60;
+				locy = boardLocY + 180;
+			}else if(i == 2){
+				locx = boardLocX - 70;
+				locy = boardLocY + 300;
+			}
+			
 			gd.drawImage(getImage("img/smallpieces/" + savedPieces.get(i).getImageName() + ".png"), locx, locy, null);
 		}
 	}
@@ -705,32 +755,35 @@ public class GameFrame extends Game{
 	
 	public void setGhostPiece(){
 		String img = "img/ghost.png";
+		int tempX = boardLocX  + 65;
+		int tempY = boardLocY - 3*size + 49;
+		
 		if(currentPiece instanceof HookPiece){
-			ghostPiece = new HookPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new HookPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof JPiece){
-			ghostPiece = new JPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new JPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof LinePiece){
-			ghostPiece = new LinePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new LinePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof LPiece){
-			ghostPiece = new LPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new LPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof RectanglePiece){
-			ghostPiece = new RectanglePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new RectanglePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof SPiece){
-			ghostPiece = new SPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new SPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof SquarePiece){
-			ghostPiece = new SquarePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new SquarePiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof TPiece){
-			ghostPiece = new TPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new TPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		else if(currentPiece instanceof ZPiece){
-			ghostPiece = new ZPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), boardLocX, boardLocY - 3 * size);
+			ghostPiece = new ZPiece(getImage(img), currentPiece.getX(), currentPiece.getY(), tempX, tempY);
 		}
 		moveGhostPiece();
 	}
@@ -751,7 +804,10 @@ public class GameFrame extends Game{
 		Tetrimino t;
 		int x = 3, y = 1;
 		String block = "img/I block.png";
-		t = new LinePiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		int tempX = boardLocX  + 65;
+		int tempY = boardLocY - 3*size + 49;
+		
+		t = new LinePiece(getImage(block), x, y, tempX, tempY);
 		
 		if(!extreme){
 			availablePieces.add(t);
@@ -761,13 +817,13 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/rectangle block.png";
-		t = new RectanglePiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new RectanglePiece(getImage(block), x, y, tempX, tempY);
 		if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
 			availablePieces.add(t);
 		}
 		
 		block = "img/hook block.png";
-		t = new HookPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new HookPiece(getImage(block), x, y, tempX, tempY);
 		
 		if(rand.nextInt(100) + 1 <= t.getChance() && extreme){
 			availablePieces.add(t);
@@ -777,7 +833,7 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/J block.png";
-		t = new JPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new JPiece(getImage(block), x, y, tempX, tempY);
 		
 		if(!extreme){
 			availablePieces.add(t);
@@ -787,7 +843,7 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/L block.png";
-		t = new LPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new LPiece(getImage(block), x, y, tempX, tempY);
 		if(!extreme){
 			availablePieces.add(t);
 		}
@@ -796,7 +852,7 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/T block.png";
-		t = new TPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new TPiece(getImage(block), x, y, tempX, tempY);
 		if(!extreme){
 			availablePieces.add(t);
 		}
@@ -807,7 +863,7 @@ public class GameFrame extends Game{
 		y = 0;
 
 		block = "img/S block.png";
-		t = new SPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new SPiece(getImage(block), x, y, tempX, tempY);
 		if(!extreme){
 			availablePieces.add(t);
 		}
@@ -816,7 +872,7 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/Z block.png";
-		t = new ZPiece(getImage(block), x, y, boardLocX, boardLocY - 3*size);
+		t = new ZPiece(getImage(block), x, y, tempX, tempY);
 		if(!extreme){
 			availablePieces.add(t);
 		}
@@ -825,7 +881,7 @@ public class GameFrame extends Game{
 		}
 		
 		block = "img/square Block.png";
-		t = new SquarePiece(getImage(block), x + 1, y + 1, boardLocX, boardLocY - 3*size);
+		t = new SquarePiece(getImage(block), x + 1, y + 1, tempX, tempY);
 		if(!extreme){
 			availablePieces.add(t);
 		}
@@ -959,6 +1015,7 @@ public class GameFrame extends Game{
 	}
 	
 	private void getChanceScreenInput() {
+		int i = 0;
 		if(click()) {
 			int x = getMouseX(), y = getMouseY();
 			for(Button b : chanceButtons)
@@ -966,8 +1023,11 @@ public class GameFrame extends Game{
 					if(b.getBtnName().equals("chance_back")) {
 						for(Tetrimino t : availablePieces)
 							for(Button btn : chanceButtons)
-								if(btn.getBtnName().equals(t.getImageName()))
-									t.setChance((int) ((btn.getX() - (center - 150)) / 3));
+								if(btn.getBtnName().equals(t.getImageName())) {
+									t.setChance((int) ((btn.getX() - (center - 150)) / 300.0 * 100));
+									tetlist.set(i++, t.getChance());
+									System.out.println(btn.getBtnName() + " " + tetlist.get(i-1));
+								}
 						currentScreen = Screen.MAIN_MENU;
 					}else if(b.getBtnName().endsWith(" +")) {
 						for(Button btn : chanceButtons)
@@ -1026,6 +1086,28 @@ public class GameFrame extends Game{
 				}
 			}
 			
+	}
+
+	private void getGameOverInput() {
+		if(click()) {
+			int x = getMouseX(), y = getMouseY();
+			for(Button b : gameOverButtons)
+				if(b.contains(x, y)) {
+					if(b.getBtnName().equals("Restart")) {
+						scores.add(score);
+						initializeBoard();
+						initGameState();
+						initializePieces();
+						currentScreen = Screen.GAME_SCREEN;
+					} else if(b.getBtnName().equals("ExitToMainMenu")) {
+						scores.add(score);
+						initializeBoard();
+						initGameState();
+						initializePieces();
+						currentScreen = Screen.MAIN_MENU;
+					}
+				}
+			}
 	}
 
 }
