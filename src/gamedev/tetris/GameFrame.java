@@ -189,7 +189,7 @@ public class GameFrame extends Game{
 		savedPieces.clear();
 		downTime = 0;
 		downDelay = 15 - currentLvl;
-		moveDelay = 90;
+		moveDelay = 100;
 		fallDelay = 960 - 60*currentLvl;
 
 	}
