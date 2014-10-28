@@ -73,7 +73,7 @@ public class GameFrame extends Game{
 	
 	long fallTime, fallDelay, moveTime, moveDelay, downTime, downDelay;
 
-	GameFont gameFont, scoreFont;
+	GameFont gameFont, scoreFont, gameOverFont;
 	
 	String quickDropSound = "sfx/8.wav";
 	
@@ -90,7 +90,8 @@ public class GameFrame extends Game{
 		savedPieces = new ArrayList<Tetrimino>();
 		boardLocX = (getWidth() / 2) - (width*size)/2 - 55;
 		boardLocY = (getHeight() / 2) - ((height - 3)*size)/2 - 2*size;
-		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), Color.black); // Cooper Std Black
+		gameFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), new Color(198, 198, 198)); // Cooper Std Black
+		gameOverFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 25), new Color(58, 111, 255)); // Cooper Std Black
 		scoreFont = new SystemFont(new Font("Cooper Std Black", Font.PLAIN, 23), Color.black); // Cooper Std Black
 		
 		middleLeft = getWidth() / 4;
@@ -175,7 +176,7 @@ public class GameFrame extends Game{
 		chanceButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset, "chance_back"));
 
 		highScoresButtons = new ArrayList<Button>();
-		highScoresButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset, "hs_back"));
+		highScoresButtons.add(new Button(getImage("img/buttons/back.png"), center - 40, 425 + offset + 40, "hs_back"));
 	}
 
 	private void initGameState() {
@@ -268,6 +269,9 @@ public class GameFrame extends Game{
 					b.render(gd);
 				break;
 			case GAME_OVER:
+				gd.drawImage(getImage("img/gameover.png"), 0, 0, null);
+				gameOverFont.drawString(gd, currentLvl+"", 270, 175);
+				gameOverFont.drawString(gd, score+"", 270, 255);
 				for(Button b : gameOverButtons)
 					b.render(gd);
 				break;
@@ -296,10 +300,10 @@ public class GameFrame extends Game{
 			case HIGH_SCORES_SCREEN:
 				gd.setColor(Color.black);
 				gd.fillRect(0, 0, getWidth(), getHeight());
-				gd.drawImage(getImage("img/gameover.png/"), 0, 0, null);
+				gd.drawImage(getImage("img/highscores.png"), 0, 0, null);
 				gd.setColor(Color.white);
 				for(int i = 0; i < scores.size() && i < 10; i++)
-					gd.drawString(scores.get(i).toString(), 50, 50 + (i * 50));
+					gd.drawString(scores.get(i).toString(), 50, 100 + (i * 50));
 				
 				for(Button b : highScoresButtons) {
 					b.render(gd);
