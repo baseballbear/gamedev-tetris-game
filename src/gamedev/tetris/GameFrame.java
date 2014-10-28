@@ -184,13 +184,13 @@ public class GameFrame extends Game{
 		saveCount = 0;
 		fallTime = 0;
 		moveTime = 0;
-		currentLvl = 1;
+		currentLvl = 15;
 		linesToClear = currentLvl * 5;
 		score = 0;
 		savedPieces.clear();
 		downTime = 0;
 		downDelay = 15 - currentLvl;
-		moveDelay = 100;
+		moveDelay = 150;
 		fallDelay = 960 - 60*currentLvl;
 
 	}
