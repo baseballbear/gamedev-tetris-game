@@ -183,13 +183,13 @@ public class GameFrame extends Game{
 		saveCount = 0;
 		fallTime = 0;
 		moveTime = 0;
-		currentLvl = 1;
+		currentLvl = 15;
 		linesToClear = currentLvl * 5;
 		score = 0;
 		savedPieces.clear();
 		downTime = 0;
 		downDelay = 15 - currentLvl;
-		moveDelay = 100;
+		moveDelay = 150;
 		fallDelay = 960 - 60*currentLvl;
 
 	}
@@ -296,7 +296,7 @@ public class GameFrame extends Game{
 			case HIGH_SCORES_SCREEN:
 				gd.setColor(Color.black);
 				gd.fillRect(0, 0, getWidth(), getHeight());
-				gd.drawImage(getImage("img/gameover.png/"), 0, 0, null);
+				gd.drawImage(getImage("img/highscores.png/"), 0, 0, null);
 				gd.setColor(Color.white);
 				for(int i = 0; i < scores.size() && i < 10; i++)
 					gd.drawString(scores.get(i).toString(), 50, 50 + (i * 50));
