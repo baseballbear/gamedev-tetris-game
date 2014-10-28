@@ -51,6 +51,14 @@ public class GameFrame extends Game{
 		Left, Down, Right;
 	}
 	
+	String music[] = {"Tetris - 2a.mid",
+			"Tetris - In Level Theme.mid", 
+			"Tetris - Ma.mid", 
+			"Tetris - Medely.mid", 
+			"Tetris - Medley.mid", 
+			"Tetris - Song A.mid", 
+			"Tetris Theme.mid"};
+	
 	
 	public enum Screen {
 		GAME_SCREEN,
@@ -114,7 +122,7 @@ public class GameFrame extends Game{
 		}
 		
 		currentScreen = Screen.MAIN_MENU;
-		
+		playMusic("sound/" + music[1]);
 	}
 	
 	private void initializeButtons() {
@@ -148,6 +156,14 @@ public class GameFrame extends Game{
 		
 		chanceButtons = new ArrayList<Button>();
 		offset = 100;
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 354 + offset, "bar1 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 54 + offset, "bar2 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 104 + offset, "bar3 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 154 + offset, "bar4 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 204 + offset, "bar5 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 254 + offset, "bar6 -"));
+		chanceButtons.add(new Button(getImage("img/buttons/sliderbar.png"), middleLeft, 304 + offset, "bar7 -"));
+		
 		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 354 + offset, "small_i3"));
 		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 54 + offset, "small_j"));
 		chanceButtons.add(new Button(getImage("img/buttons/slider.png"), center, 104 + offset, "small_L"));
@@ -164,7 +180,6 @@ public class GameFrame extends Game{
 		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 300 + offset, "small_square -"));
 		chanceButtons.add(new Button(getImage("img/buttons/left.png"), middleLeft, 350 + offset, "small_i3 -"));
 
-		
 		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 50 + offset, "small_j +"));
 		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 100 + offset, "small_L +"));
 		chanceButtons.add(new Button(getImage("img/buttons/right.png"), middleRight, 150 + offset, "small_t +"));
@@ -184,7 +199,7 @@ public class GameFrame extends Game{
 		saveCount = 0;
 		fallTime = 0;
 		moveTime = 0;
-		currentLvl = 15;
+		currentLvl = 1;
 		linesToClear = currentLvl * 5;
 		score = 0;
 		savedPieces.clear();
@@ -913,6 +928,7 @@ public class GameFrame extends Game{
 						initGameState();
 						initializePieces();
 						currentScreen = Screen.MAIN_MENU;
+						playMusic("sound/" + music[1]);
 					} else if(b.getBtnName().equals("Resume")) {
 						currentScreen = Screen.GAME_SCREEN;
 					}
@@ -927,9 +943,12 @@ public class GameFrame extends Game{
 				if(b.contains(x, y)) {
 					if(b.getBtnName().equals("Start")) {
 						currentScreen = Screen.GAME_SCREEN;
+						playMusic("sound/" + music[6]);
+						break;
 					}
 					else if(b.getBtnName().equals("Settings")) {
 						currentScreen = Screen.SETTINGS_SCREEN;
+						break;
 					} else if(b.getBtnName().equals("Chance")) {
 						currentScreen = Screen.CHANCE_SCREEN;
 
@@ -940,11 +959,13 @@ public class GameFrame extends Game{
 								}
 							}
 						}
+						break;
 					} else if(b.getBtnName().equals("Highscores")) {
 						currentScreen = Screen.HIGH_SCORES_SCREEN;
 
 						Collections.sort(scores);
 						Collections.reverse(scores);
+						break;
 					} else if(b.getBtnName().equals("Quit")) {
 						writeHighScores();
 						System.exit(0);
