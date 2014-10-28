@@ -122,7 +122,7 @@ public class GameFrame extends Game{
 		}
 		
 		currentScreen = Screen.MAIN_MENU;
-		playMusic("sound/" + music[1]);
+		playMusic("sound/" + music[4]);
 	}
 	
 	private void initializeButtons() {
@@ -262,6 +262,7 @@ public class GameFrame extends Game{
 				if(isTopOccupied()){
 					//gameOver(gd);
 					currentScreen = Screen.GAME_OVER;
+					playMusic("sound/trainer_defeat.mid");
 					spawn = false;
 					scores.add(score);
 				}
@@ -928,7 +929,8 @@ public class GameFrame extends Game{
 						initGameState();
 						initializePieces();
 						currentScreen = Screen.MAIN_MENU;
-						playMusic("sound/" + music[1]);
+						playMusic("sound/" + music[4]);
+						
 					} else if(b.getBtnName().equals("Resume")) {
 						currentScreen = Screen.GAME_SCREEN;
 					}
@@ -1124,12 +1126,14 @@ public class GameFrame extends Game{
 						initGameState();
 						initializePieces();
 						currentScreen = Screen.GAME_SCREEN;
+						playMusic("sound/" + music[6]);
 					} else if(b.getBtnName().equals("ExitToMainMenu")) {
 						scores.add(score);
 						initializeBoard();
 						initGameState();
 						initializePieces();
 						currentScreen = Screen.MAIN_MENU;
+						playMusic("sound/" + music[4]);
 					}
 				}
 			}

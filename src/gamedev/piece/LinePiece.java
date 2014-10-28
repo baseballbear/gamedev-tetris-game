@@ -13,7 +13,7 @@ public class LinePiece extends Tetrimino{
 		this.boardX = boardX;
 		this.boardY = boardY;
 		initializeMatrix(image);
-		super.imageName = "small_i3";
+		super.imageName = "small_i22";
 	
 		matrix[2][0].setOccupied(true);
 		matrix[2][1].setOccupied(true);

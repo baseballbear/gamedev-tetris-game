@@ -11,7 +11,7 @@ public class SquarePiece extends Tetrimino{
 		super(x,y);
 		setRow(2);
 		setCol(2);
-		super.imageName = "small_square";
+		super.imageName = "small_square2";
 		this.boardX = boardX;
 		this.boardY = boardY;
 		
